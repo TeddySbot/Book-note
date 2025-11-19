@@ -63,5 +63,47 @@
 *.3dm
 *.max
 
-# .env
-*.env
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Vite cache
+.vite/
+vite.config.local.*
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Editor folders
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+
+# Lockfiles (tu peux en enlever si tu en utilises un)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Local server cache
+.cache/
