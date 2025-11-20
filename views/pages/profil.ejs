@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <h1>Profil utilisateur</h1>
+
+    <% if (user) { %>
+        <p>Nom : <%= user.name %></p>
+        <p>Email : <%= user.email %></p>
+        <img src="<%= user.picture %>" alt="Avatar" width="100">
+    <% } else { %>
+        <p>Vous n'êtes pas connecté.</p>
+    <% } %>
+</body>
+</html>

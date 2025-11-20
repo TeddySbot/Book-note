@@ -3,6 +3,7 @@
 ## Initialisé le projet 
 
 ```
+npm install
 
 
 ```

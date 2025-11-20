@@ -1,4 +1,16 @@
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="stylesheet" href="/css/style.css">
+<header class="navbar">
+    <div class="navbar-left">
+        <a href="/"> <h1>Book Note</h1></a>
+    </div>
+    <div class="navbar-right">
+        <% if (!user) { %>
+            <div id="g_id_onload" data-client_id="<%= clientId %>" data-callback="handleCredentialResponse"></div>
+            <div id="buttonDiv"></div>
+        <% } else { %>
+            <div class="user-info">
+                <a href="/profil"><%= user.name %></a>
+                <img src="<%= user.picture %>" alt="Avatar" class="avatar">
+            </div>
+        <% } %>
+    </div>
+</header>

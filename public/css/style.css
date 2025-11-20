@@ -1,0 +1,75 @@
+
+html, body {
+    margin: 0;
+    background-color: #f0f0f0f0;
+}
+
+
+/************************************  ****** *********************************/
+/************************************  header *********************************/
+/************************************  ****** *********************************/
+
+/* Barre de navigation */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #75584f;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+}
+
+/* Titre à gauche */
+.navbar-left h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+/* Contenu à droite */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* Bouton Google */
+#buttonDiv {
+    display: inline-block;
+}
+
+/* Utilisateur connecté */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-info p {
+    margin: 0;
+}
+
+/* Avatar rond */
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Lien déconnexion */
+.user-info a {
+    color: white;
+    text-decoration: underline;
+    margin-left: 10px;
+}
+
+
+/************************************  ****** *********************************/
+/************************************  header *********************************/
+/************************************  ****** *********************************/
