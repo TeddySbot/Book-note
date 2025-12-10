@@ -1,16 +1,21 @@
 {
-  "name": "ybook",
+  "name": "book-note",
   "version": "1.0.0",
-  "description": "Projet Yboost 2025/2026 avec Victoria, Hugo, Mathéo et Teddy.",
-  "main": "index.js",
+  "description": "```",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "typescript": "^5.9.3",
-    "vite": "^6.4.1"
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "fetch": "^1.1.0",
+    "google-auth-library": "^10.5.0"
   }
 }

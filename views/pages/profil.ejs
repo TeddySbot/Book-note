@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Profil</title>
+    <%- include('../partials/head') %>
+
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+<div class="profile-container">
+
+    <h1>Profil utilisateur</h1>
+
+    <div class="profile-header">
+        <img src="<%= user.picture || '/images/default-avatar.png' %>" alt="Avatar" class="avatar">
+        <div>
+            <h2><%= user.name %></h2>
+            <p><%= user.email %></p>
+
+            <% if (user.email_verified) { %>
+                <p class="email-verified">Email vérifié ✔️</p>
+            <% } else { %>
+                <p class="email-unverified">Email non vérifié ❌</p>
+            <% } %>
+        </div>
+    </div>
+
+    <ul class="profile-details">
+        <li><strong>ID Google :</strong> <%= user.id %></li>
+        <li><strong>Prénom :</strong> <%= user.firstname %></li>
+        <li><strong>Nom :</strong> <%= user.lastname %></li>
+        <li><strong>Langue :</strong> <%= user.locale %></li>
+    </ul>
+
+</div>
+
+</body>
+
+</html>

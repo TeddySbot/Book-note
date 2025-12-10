@@ -1,5 +1,13 @@
 # BOOKNOOK
 
+## Initialisé le projet 
+
+```
+npm install
+
+
+```
+
 NookBook est un site web permettant aux utilisateurs de répertorier, organiser et analyser leur collection de livres.
 Le projet vise à offrir une plateforme intuitive où chacun peut :
 - enregistrer les livres qu’il possède,

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Book Note</title>
+    <%- include('../partials/head') %>
+
+
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+
+<div class="book-container">
+
+    <!-- Titre -->
+    <h1><%= book.title %></h1>
+
+    <!-- Image de couverture -->
+    <% if (coverUrl) { %>
+        <img class="book-cover" src="<%= coverUrl %>" alt="Couverture du livre">
+    <% } else { %>
+        <p>Aucune image disponible.</p>
+    <% } %>
+
+    <!-- Description -->
+    <h2>Description</h2>
+    <p>
+        <% if (book.description) { %>
+            <% if (typeof book.description === 'string') { %>
+                <%= book.description %>
+            <% } else { %>
+                <%= book.description.value %>
+            <% } %>
+        <% } else { %>
+            Aucune description disponible.
+        <% } %>
+    </p>
+
+    <!-- Auteur(s) -->
+    <h2>Auteur(s)</h2>
+    <% if (book.authors && book.authors.length > 0) { %>
+        <ul>
+            <% book.authors.forEach(author => { %>
+                <li><%= author.author.key %></li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>Auteur inconnu</p>
+    <% } %>
+
+    <!-- Sujets -->
+    <h2>Sujets</h2>
+    <% if (book.subjects && book.subjects.length > 0) { %>
+        <ul>
+            <% book.subjects.forEach(subject => { %>
+                <li><%= subject %></li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>Aucun sujet trouvé.</p>
+    <% } %>
+
+    <!-- Lieux -->
+    <% if (book.subject_places) { %>
+        <h2>Lieux</h2>
+        <ul>
+            <% book.subject_places.forEach(place => { %>
+                <li><%= place %></li>
+            <% }) %>
+        </ul>
+    <% } %>
+
+    <!-- Époques -->
+    <% if (book.subject_times) { %>
+        <h2>Périodes</h2>
+        <ul>
+            <% book.subject_times.forEach(time => { %>
+                <li><%= time %></li>
+            <% }) %>
+        </ul>
+    <% } %>
+
+</div>
+</body>
+
+</html>

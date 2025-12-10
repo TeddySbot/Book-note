@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Book Note</title>
+    <%- include('../partials/head') %>
+
+</head>
+
+
+<body>
+    <%- include('../partials/header') %>
+
+    <div class="library-container">
+        <h1>Librairie</h1>
+
+        <% if (error) { %>
+            <p class="error"><%= error %></p>
+        <% } %>
+
+        <% if (books && books.length > 0) { %>
+            <div class="book-list">
+                <% books.forEach(book => { %>
+                    <div class="book-card">
+                        <a href="/books<%= book.key %>"><h3><%= book.title %></h3></a>
+                        <% if (book.cover_i) { %>
+                            <img src="https://covers.openlibrary.org/b/id/<%= book.cover_i %>-L.jpg" alt="Couverture">
+                        <% } else { %>
+                            <p>Aucune couverture disponible</p>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+    </div>
+
+
+    <%- include('../partials/footer') %>
+</body>
+
+</html>
