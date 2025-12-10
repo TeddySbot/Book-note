@@ -21,7 +21,7 @@
             <div class="book-list">
                 <% books.forEach(book => { %>
                     <div class="book-card">
-                        <h3><%= book.title %></h3>
+                        <a href="/books<%= book.key %>"><h3><%= book.title %></h3></a>
                         <% if (book.cover_i) { %>
                             <img src="https://covers.openlibrary.org/b/id/<%= book.cover_i %>-L.jpg" alt="Couverture">
                         <% } else { %>
@@ -34,7 +34,7 @@
     </div>
 
 
-    <script src="/js/google.js"></script>
+    <%- include('../partials/footer') %>
 </body>
 
 </html>

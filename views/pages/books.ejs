@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Book Note</title>
+    <%- include('../partials/head') %>
+
+
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <% if (book) { %>
+        <h1><%= book.title %></h1>
+        <% if (coverUrl) { %>
+            <img src="<%= coverUrl %>" alt="Couverture du livre">
+        <% } %>
+
+        <% if (book.description) { %>
+            <p>
+                <%= typeof book.description === 'string' ? book.description : book.description.value %>
+            </p>
+        <% } %>
+
+        <% if (book.authors) { %>
+            <p>Auteur(s) :
+                <% book.authors.forEach(author => { %>
+                    <%= author.author_name %>
+                <% }); %>
+            </p>
+        <% } %>
+    <% } else { %>
+        <p>Livre introuvable.</p>
+    <% } %>
+        <%- include('../partials/footer') %>
+
+</body>
+
+</html>

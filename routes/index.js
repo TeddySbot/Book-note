@@ -40,7 +40,6 @@ router.post('/auth/google', async (req, res) => {
             email_verified: payload.email_verified
         };
 
-        console.log("User session:", req.session.user);
 
 
         res.json({ success: true, user: req.session.user });
