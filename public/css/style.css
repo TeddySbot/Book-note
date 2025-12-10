@@ -25,10 +25,23 @@ html, body {
     color: black;
 }
 
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* espace entre les liens */
+}
+
+.navbar-left h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: white;
+}
+
+
 /* Titre à gauche */
 .navbar-left h1 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 2.5rem;
 }
 
 /* Contenu à droite */
@@ -71,5 +84,132 @@ html, body {
 
 
 /************************************  ****** *********************************/
-/************************************  header *********************************/
+/************************************  profil *********************************/
 /************************************  ****** *********************************/
+
+.profile-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 25px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Titre */
+.profile-container h1 {
+    text-align: center;
+    color: #75584f;
+    margin-bottom: 20px;
+}
+
+/* Section avatar + nom + email */
+.profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+/* Avatar */
+.profile-header img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #75584f;
+}
+
+/* Nom */
+.profile-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+/* Email */
+.profile-header p {
+    margin: 5px 0;
+    color: #555;
+}
+
+/* Liste des infos */
+.profile-details {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.profile-details li {
+    background-color: #f7f2f1;
+    border-left: 4px solid #75584f;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Statut email vérifié */
+.email-verified {
+    color: green;
+    font-weight: bold;
+}
+
+.email-unverified {
+    color: red;
+    font-weight: bold;
+}
+
+/************************************  ****** *********************************/
+/************************************  library *********************************/
+/************************************  ****** *********************************/
+
+.library-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.library-container h1 {
+    text-align: center;
+    color: #75584f;
+    margin-bottom: 20px;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.book-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.book-card {
+    background: #f7f2f1;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.book-card h3 {
+    font-size: 1.1rem;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.book-card img {
+    width: 120px;
+    height: auto;
+    margin-top: 10px;
+    border-radius: 5px;
+}

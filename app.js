@@ -21,12 +21,16 @@ app.use(session({
 
 // Chemin des Routes
 const indexRoute = require('./routes/index');
-const profilRoute = require('./routes/Profil');
+const profilRoute = require('./routes/profil');
+const libraryRoute = require('./routes/library');
+const booksRoute = require('./routes/books');
 
 // Routes
 app.use(express.static('public'));
 app.use('/', indexRoute);
 app.use('/profil', profilRoute);
+app.use('/library', libraryRoute);
+app.use('/books', booksRoute);
 
 // Lancement du serveur
 const PORT = 3000;

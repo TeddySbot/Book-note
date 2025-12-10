@@ -1,6 +1,7 @@
 <header class="navbar">
     <div class="navbar-left">
         <a href="/"> <h1>Book Note</h1></a>
+        <a href="/library"><h2>Blibliothèque</h2></a>
     </div>
     <div class="navbar-right">
         <% if (!user) { %>
@@ -9,8 +10,10 @@
         <% } else { %>
             <div class="user-info">
                 <a href="/profil"><%= user.name %></a>
-                <img src="<%= user.picture %>" alt="Avatar" class="avatar">
+                <img src="<%= user.picture || '/images/default-avatar.png' %>" alt="Avatar" class="avatar">
             </div>
         <% } %>
     </div>
+
+
 </header>

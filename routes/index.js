@@ -7,7 +7,7 @@ const client = new OAuth2Client(CLIENT_ID);
 
 // Page d'accueil
 router.get('/', (req, res) => {
-    res.render('pages/index', { clientId: CLIENT_ID, user: req.session.user});
+    res.render('pages/index', { clientId: CLIENT_ID, user: req.session.user });
 });
 
 
@@ -24,11 +24,24 @@ router.post('/auth/google', async (req, res) => {
 
         const payload = ticket.getPayload();
 
+        let picture = payload.picture;
+        if (picture && picture.includes("=")) {
+            picture = picture.split("=")[0]; 
+        }
+
         req.session.user = {
+            id: payload.sub,
             name: payload.name,
             email: payload.email,
-            picture: payload.picture
+            picture: picture,
+            firstname: payload.given_name,
+            lastname: payload.family_name,
+            locale: payload.locale,
+            email_verified: payload.email_verified
         };
+
+        console.log("User session:", req.session.user);
+
 
         res.json({ success: true, user: req.session.user });
     } catch (error) {
