@@ -1,5 +1,5 @@
-
-html, body {
+html,
+body {
     margin: 0;
     background-color: #f0f0f0f0;
 }
@@ -17,7 +17,7 @@ html, body {
     padding: 10px 20px;
     background-color: #75584f;
     color: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .navbar a {
@@ -28,7 +28,8 @@ html, body {
 .navbar-left {
     display: flex;
     align-items: center;
-    gap: 20px; /* espace entre les liens */
+    gap: 20px;
+    /* espace entre les liens */
 }
 
 .navbar-left h2 {
@@ -93,7 +94,7 @@ html, body {
     padding: 25px;
     background-color: white;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Titre */
@@ -172,7 +173,7 @@ html, body {
     padding: 20px;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .library-container h1 {
@@ -197,7 +198,7 @@ html, body {
     background: #f7f2f1;
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
@@ -212,4 +213,27 @@ html, body {
     height: auto;
     margin-top: 10px;
     border-radius: 5px;
+}
+
+
+
+/************************************  ****** *********************************/
+/************************************  books *********************************/
+/************************************  ****** *********************************/
+
+
+
+
+.book-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f7f3ed;
+    border-radius: 10px;
+}
+
+.book-cover {
+    width: 250px;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }

@@ -11,7 +11,7 @@ router.get('/:type/:id', async (req, res) => {
     try {
         const response = await fetch(`https://openlibrary.org${bookKey}.json`);
         const bookData = await response.json();
-
+        console.log(bookData);
         let coverUrl = null;
         if (bookData.covers && bookData.covers.length > 0) {
             coverUrl = `https://covers.openlibrary.org/b/id/${bookData.covers[0]}-L.jpg`;
