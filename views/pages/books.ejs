@@ -38,12 +38,12 @@
 
     <!-- Auteur(s) -->
     <h2>Auteur(s)</h2>
-    <% if (book.authors && book.authors.length > 0) { %>
-        <ul>
-            <% book.authors.forEach(author => { %>
-                <li><%= author.author.key %></li>
-            <% }) %>
-        </ul>
+    <% if (authors && authors.length > 0) { %>
+    <ul>
+        <% authors.forEach(authorName => { %>
+            <li><%= authorName %></li>
+        <% }) %>
+    </ul>
     <% } else { %>
         <p>Auteur inconnu</p>
     <% } %>

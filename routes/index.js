@@ -7,7 +7,7 @@ const client = new OAuth2Client(CLIENT_ID);
 
 // Page d'accueil
 router.get('/', (req, res) => {
-    res.render('pages/index', { clientId: CLIENT_ID, user: req.session.user });
+    res.render('pages/index');
 });
 
 
