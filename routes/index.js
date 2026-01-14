@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { OAuth2Client } = require('google-auth-library');
-
+const db = require('../config/db');
 const CLIENT_ID = '754068118410-8s00fbmh36hst5e1aclmkf7v2ucp6mnb.apps.googleusercontent.com';
 const client = new OAuth2Client(CLIENT_ID);
 
@@ -25,7 +25,7 @@ router.post('/auth/google', async (req, res) => {
 
         let picture = payload.picture;
         if (picture && picture.includes("=")) {
-            picture = picture.split("=")[0]; 
+            picture = picture.split("=")[0];
         }
 
         req.session.user = {
@@ -33,11 +33,16 @@ router.post('/auth/google', async (req, res) => {
             name: payload.name,
             email: payload.email,
             picture: picture,
-            firstname: payload.given_name,
-            lastname: payload.family_name,
             locale: payload.locale,
-            email_verified: payload.email_verified
         };
+
+        db.run(
+            `INSERT INTO users (email, username, local) VALUES (?, ?, ?) ON CONFLICT(email) DO UPDATE SET username=excluded.username, local=excluded.local`,
+            [payload.email, payload.name, payload.locale],
+            (err) => {
+                if (err) console.error('❌ DB write error:', err.message);
+            }
+        );
 
 
 

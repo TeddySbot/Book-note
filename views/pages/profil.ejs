@@ -17,19 +17,10 @@
         <div>
             <h2><%= user.name %></h2>
             <p><%= user.email %></p>
-
-            <% if (user.email_verified) { %>
-                <p class="email-verified">Email vérifié ✔️</p>
-            <% } else { %>
-                <p class="email-unverified">Email non vérifié ❌</p>
-            <% } %>
         </div>
     </div>
 
     <ul class="profile-details">
-        <li><strong>ID Google :</strong> <%= user.id %></li>
-        <li><strong>Prénom :</strong> <%= user.firstname %></li>
-        <li><strong>Nom :</strong> <%= user.lastname %></li>
         <li><strong>Langue :</strong> <%= user.locale %></li>
     </ul>
 

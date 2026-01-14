@@ -8,7 +8,6 @@ router.get('/', async (req, res) => {
         const response = await fetch("https://openlibrary.org/search.json?q=programming");
         const data = await response.json();
         const books = data.docs.slice(0); 
-        console.log(books);
 
         res.render('pages/library', { 
             books, 

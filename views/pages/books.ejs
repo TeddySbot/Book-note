@@ -80,6 +80,21 @@
         </ul>
     <% } %>
 
+
+    <% if (user) { %>
+        <label for="bookStatus">Statut :</label>
+        <select id="bookStatus" data-book-id="<%= book.key %>" data-user-id="<%= user.id %>">
+            <option value="">-- Choisir un statut --</option>
+            <option value="a_lire">À lire</option>
+            <option value="en_cours">En cours</option>
+            <option value="deja_lu">Déjà lu</option>
+        </select>
+    <% } %>
+
+    <script src="/js/books.js"></script>
+
+
+
 </div>
 </body>
 

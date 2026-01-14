@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS auth_providers (
 )
 `, (err) => {
   if (err) console.error("❌ auth_providers table error:", err.message);
-  else console.log("✅ Table auth_providers prête");
 });
 
 module.exports = db;
