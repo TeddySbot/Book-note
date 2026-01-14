@@ -6,6 +6,7 @@
 *.jif
 *.jfif
 *.jfi
+*.db
 
 # JPEG 2000
 *.jp2
@@ -107,3 +108,5 @@ pnpm-lock.yaml
 
 # Local server cache
 .cache/
+
+

@@ -12,7 +12,6 @@ router.get('/', (req, res) => {
 
 
 
-// Vérifier le token Google et créer la session
 router.post('/auth/google', async (req, res) => {
     const { credential } = req.body;
 
