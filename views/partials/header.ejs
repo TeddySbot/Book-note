@@ -1,19 +1,17 @@
 <header class="navbar">
-    <div class="navbar-left">
-        <a href="/"> <h1>Book Note</h1></a>
+        <a href="/"> <h2>Book Note</h2></a>
         <a href="/library"><h2>Blibliothèque</h2></a>
-    </div>
-    <div class="navbar-right">
+        <% if (user) { %>
+            <a href="/profil/list"><h2>Mes livres</h2></a>
+        <% } %>
         <% if (!user) { %>
             <div id="g_id_onload" data-client_id="<%= clientId %>" data-callback="handleCredentialResponse"></div>
             <div id="buttonDiv"></div>
         <% } else { %>
             <div class="user-info">
-                <a href="/profil"><%= user.name %></a>
-                <img src="<%= user.picture || '/images/default-avatar.png' %>" alt="Avatar" class="avatar">
+                <a href="/profil"><img src="<%= user.picture || '/images/default-avatar.png' %>" alt="Avatar" class="avatar"></a>
             </div>
         <% } %>
-    </div>
 
 
 </header>

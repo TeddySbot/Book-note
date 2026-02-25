@@ -83,11 +83,12 @@
 
     <% if (user) { %>
         <label for="bookStatus">Statut :</label>
-        <select id="bookStatus" data-book-id="<%= book.key %>" data-user-id="<%= user.id %>">
+        <select id="bookStatus" data-book-id="<%= book.key %>">
             <option value="">-- Choisir un statut --</option>
-            <option value="a_lire">À lire</option>
-            <option value="en_cours">En cours</option>
-            <option value="deja_lu">Déjà lu</option>
+            <option value="wishlist">À voir</option>
+            <option value="reading">En cours de lecture</option>
+            <option value="completed">Terminé</option>
+            <option value="favorite">Favori</option>
         </select>
     <% } %>
 

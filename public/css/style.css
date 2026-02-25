@@ -11,45 +11,23 @@ body {
 
 /* Barre de navigation */
 .navbar {
+    margin-top: 30px;
+    margin-left: 10%;
+    margin-right: 10%;
     display: flex;
-    justify-content: space-between;
+    justify-content:space-around;
     align-items: center;
     padding: 10px 20px;
+    border-radius: 50px;
     background-color: #75584f;
     color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    
 }
 
 .navbar a {
     text-decoration: none;
     color: black;
-}
-
-.navbar-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    /* espace entre les liens */
-}
-
-.navbar-left h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: white;
-}
-
-
-/* Titre à gauche */
-.navbar-left h1 {
-    margin: 0;
-    font-size: 2.5rem;
-}
-
-/* Contenu à droite */
-.navbar-right {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
 }
 
 /* Bouton Google */

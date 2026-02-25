@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Mes Livres - Book Note</title>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+    <%- include('../partials/header') %>
+
+    <div class="list-container">
+        <h1>📚 Ma Collection</h1>
+
+        <div class="books-categories">
+
+            <!-- FAVORIS -->
+            <section class="category-section">
+                <h2>❤️ Favoris (<%= books.favorite ? books.favorite.length : 0 %>)</h2>
+                <div class="category-container">
+                    <% if (books.favorite && books.favorite.length > 0) { %>
+                        <div class="books-grid">
+                            <% books.favorite.forEach(book => { %>
+                                <div class="book-item" data-book-key="<%= book.key %>">
+                                    <div class="book-cover">
+                                        <% if (book.coverUrl) { %>
+                                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>">
+                                        <% } else { %>
+                                            <div class="no-cover">Pas de couverture</div>
+                                        <% } %>
+                                    </div>
+                                    <div class="book-info">
+                                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
+                                        <p class="authors"><%= book.authors.join(', ') %></p>
+                                        <p class="status-badge favorite-badge">Favori</p>
+                                        <button class="btn-remove" data-book-key="<%= book.key %>" data-status="favorite">Supprimer</button>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <p class="empty-message">Aucun livre favori pour le moment</p>
+                    <% } %>
+                </div>
+            </section>
+
+            <!-- EN COURS DE LECTURE -->
+            <section class="category-section">
+                <h2>📖 En cours de lecture (<%= books.reading ? books.reading.length : 0 %>)</h2>
+                <div class="category-container">
+                    <% if (books.reading && books.reading.length > 0) { %>
+                        <div class="books-grid">
+                            <% books.reading.forEach(book => { %>
+                                <div class="book-item" data-book-key="<%= book.key %>">
+                                    <div class="book-cover">
+                                        <% if (book.coverUrl) { %>
+                                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>">
+                                        <% } else { %>
+                                            <div class="no-cover">Pas de couverture</div>
+                                        <% } %>
+                                    </div>
+                                    <div class="book-info">
+                                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
+                                        <p class="authors"><%= book.authors.join(', ') %></p>
+                                        <p class="status-badge reading-badge">En cours</p>
+                                        <button class="btn-remove" data-book-key="<%= book.key %>" data-status="reading">Supprimer</button>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <p class="empty-message">Vous n'êtes pas entrain de lire actuellement</p>
+                    <% } %>
+                </div>
+            </section>
+
+            <!-- TERMINÉS -->
+            <section class="category-section">
+                <h2>✅ Terminés (<%= books.completed ? books.completed.length : 0 %>)</h2>
+                <div class="category-container">
+                    <% if (books.completed && books.completed.length > 0) { %>
+                        <div class="books-grid">
+                            <% books.completed.forEach(book => { %>
+                                <div class="book-item" data-book-key="<%= book.key %>">
+                                    <div class="book-cover">
+                                        <% if (book.coverUrl) { %>
+                                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>">
+                                        <% } else { %>
+                                            <div class="no-cover">Pas de couverture</div>
+                                        <% } %>
+                                    </div>
+                                    <div class="book-info">
+                                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
+                                        <p class="authors"><%= book.authors.join(', ') %></p>
+                                        <p class="status-badge completed-badge">Terminé</p>
+                                        <button class="btn-remove" data-book-key="<%= book.key %>" data-status="completed">Supprimer</button>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <p class="empty-message">Vous n'avez pas encore fini de livres</p>
+                    <% } %>
+                </div>
+            </section>
+
+            <!-- À VOIR (WISHLIST) -->
+            <section class="category-section">
+                <h2>📑 À voir (<%= books.wishlist ? books.wishlist.length : 0 %>)</h2>
+                <div class="category-container">
+                    <% if (books.wishlist && books.wishlist.length > 0) { %>
+                        <div class="books-grid">
+                            <% books.wishlist.forEach(book => { %>
+                                <div class="book-item" data-book-key="<%= book.key %>">
+                                    <div class="book-cover">
+                                        <% if (book.coverUrl) { %>
+                                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>">
+                                        <% } else { %>
+                                            <div class="no-cover">Pas de couverture</div>
+                                        <% } %>
+                                    </div>
+                                    <div class="book-info">
+                                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
+                                        <p class="authors"><%= book.authors.join(', ') %></p>
+                                        <p class="status-badge wishlist-badge">À voir</p>
+                                        <button class="btn-remove" data-book-key="<%= book.key %>" data-status="wishlist">Supprimer</button>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <p class="empty-message">Votre liste de souhaits est vide</p>
+                    <% } %>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script src="/js/list.js"></script>
+</body>
+
+</html>

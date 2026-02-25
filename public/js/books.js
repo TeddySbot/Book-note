@@ -11,15 +11,18 @@ if (statusSelect) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    user_id: statusSelect.dataset.userId,
                     api_book_id: statusSelect.dataset.bookId,
                     status: this.value
                 })
             });
             
             const data = await response.json();
-            console.log(data);
-            alert(data.message || 'Statut enregistré !');
+            if (response.ok) {
+                alert(data.message || 'État enregistré !');
+            } else {
+                console.error('Erreur:', data.error);
+                alert('Erreur lors de l\'enregistrement du statut');
+            }
         } catch (error) {
             console.error('Erreur:', error);
             alert('Erreur lors de l\'enregistrement du statut');

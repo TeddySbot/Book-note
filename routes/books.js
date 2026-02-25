@@ -52,9 +52,10 @@ router.get('/:type/:id', async (req, res) => {
 
 
 router.post('/status', (req, res) => {
-    const { user_id, api_book_id, status } = req.body;
+    const { api_book_id, status } = req.body;
+    const user = req.session.user;
 
-    if (!user_id || !api_book_id || !status) {
+    if (!user || !user.db_id || !api_book_id || !status) {
         console.log('❌ Données manquantes');
         return res.status(400).json({ error: 'Données manquantes' });
     }
@@ -64,7 +65,7 @@ router.post('/status', (req, res) => {
          VALUES (?, ?, ?)
          ON CONFLICT(user_id, api_book_id)
          DO UPDATE SET status=excluded.status, updated_at=CURRENT_TIMESTAMP`,
-        [user_id, api_book_id, status],
+        [user.db_id, api_book_id, status],
         function (err) {
             if (err) {
                 console.log('❌ Erreur DB:', err.message);
