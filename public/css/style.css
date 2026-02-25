@@ -215,3 +215,224 @@ body {
     border-radius: 10px;
     margin-bottom: 20px;
 }
+
+
+/************************************  ****** *********************************/
+/************************************   list *********************************/
+/************************************  ****** *********************************/
+
+.list-container {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.list-container h1 {
+    text-align: center;
+    color: #75584f;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+.books-categories {
+    width: 100%;
+}
+
+.category-section {
+    margin-bottom: 50px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.category-section h2 {
+    color: #75584f;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #75584f;
+    padding-bottom: 10px;
+}
+
+.category-container {
+    width: 100%;
+}
+
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    width: 100%;
+}
+
+.book-item {
+    background: linear-gradient(135deg, #f7f2f1 0%, #f0ebe5 100%);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.book-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    background: linear-gradient(135deg, #f0ebe5 0%, #e8dfd5 100%);
+}
+
+.book-item .book-cover {
+    width: 100%;
+    height: 280px;
+    margin: 0;
+    border-radius: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0d5cc;
+}
+
+.book-item .book-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.book-item .no-cover {
+    color: #999;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 20px;
+}
+
+.book-item .book-info {
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-item h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.book-item h3 a {
+    text-decoration: none;
+    color: #75584f;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.book-item h3 a:hover {
+    color: #5b3f38;
+    text-decoration: underline;
+}
+
+.book-item .authors {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+}
+
+.status-badge {
+    display: inline-block;
+    margin: 8px 0;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    width: fit-content;
+}
+
+.favorite-badge {
+    background-color: #ffe8e8;
+    color: #d63031;
+}
+
+.reading-badge {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.completed-badge {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.btn-remove {
+    margin-top: auto;
+    padding: 8px 14px;
+    background-color: #d63031;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-remove:hover {
+    background-color: #b71c1c;
+    transform: scale(1.05);
+}
+
+.btn-remove:active {
+    transform: scale(0.98);
+}
+
+.empty-message {
+    text-align: center;
+    color: #999;
+    font-size: 1.1rem;
+    padding: 40px 20px;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .books-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    
+    .book-item .book-cover {
+        height: 220px;
+    }
+    
+    .list-container {
+        padding: 10px;
+    }
+    
+    .category-section {
+        padding: 15px;
+    }
+    
+    .list-container h1 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .books-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+    }
+    
+    .book-item .book-cover {
+        height: 180px;
+    }
+    
+    .book-item h3 {
+        font-size: 1rem;
+    }
+    
+    .book-item .authors {
+        font-size: 0.8rem;
+    }
+}
