@@ -22,7 +22,6 @@ document.querySelectorAll('.btn-remove').forEach(btn => {
             
             if (response.ok) {
                 alert('Livre supprimé de votre collection');
-                // Recharge la page
                 window.location.reload();
             } else {
                 alert('Erreur: ' + (data.error || 'Impossible de supprimer le livre'));
@@ -34,7 +33,7 @@ document.querySelectorAll('.btn-remove').forEach(btn => {
     });
 });
 
-// Statistiques (optionnel)
+
 function displayStats() {
     const categories = document.querySelectorAll('.category-section');
     let totalBooks = 0;
@@ -49,5 +48,4 @@ function displayStats() {
     console.log(`📚 Total de livres dans votre collection: ${totalBooks}`);
 }
 
-// Appelle displayStats au chargement
 window.addEventListener('load', displayStats);
