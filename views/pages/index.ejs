@@ -3,19 +3,84 @@
 <head>
     <title>Book Note</title>
     <%- include('../partials/head') %>
-
-
 </head>
 <body>
     <%- include('../partials/header') %>
-  
-    <div class="Book">
-        <div class="Recommendation">
-            <h2>Recommendation :</h2>
-        </div>
-        <div class="dejalu">
-            <h2>Déjà Lu</h2>
-        </div>
+
+    <div class="list-container">
+
+        <% if (user) { %>
+
+            <!-- ✨ RECOMMANDATIONS -->
+            <section class="category-section">
+                <h2>✨ Recommandé pour vous (<%= recommendations.length %>)</h2>
+                <div class="category-container">
+                    <% if (recommendations.length > 0) { %>
+                        <div class="books-grid">
+                            <% recommendations.forEach(book => { %>
+                                <div class="book-item">
+                                    <div class="book-cover">
+                                        <% if (book.coverUrl) { %>
+                                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>" loading="lazy">
+                                        <% } else { %>
+                                            <div class="no-cover">Pas de couverture</div>
+                                        <% } %>
+                                    </div>
+                                    <div class="book-info">
+                                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
+                                        <p class="authors"><%= book.authors.join(', ') %></p>
+                                        <p class="status-badge favorite-badge">Recommandé</p>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p class="empty-message">
+                            Ajoutez des livres en <strong>favoris</strong> ou marquez-les
+                            <strong>terminés</strong> pour recevoir des recommandations !
+                        </p>
+                    <% } %>
+                </div>
+            </section>
+
+            <!-- ✅ DÉJÀ LU -->
+            <section class="category-section">
+                <h2>✅ Déjà Lu (<%= completedBooks.length %>)</h2>
+                <div class="category-container">
+                    <% if (completedBooks.length > 0) { %>
+                        <div class="books-grid">
+                            <% completedBooks.forEach(book => { %>
+                                <div class="book-item" data-book-key="<%= book.key %>">
+                                    <div class="book-cover">
+                                        <% if (book.coverUrl) { %>
+                                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>">
+                                        <% } else { %>
+                                            <div class="no-cover">Pas de couverture</div>
+                                        <% } %>
+                                    </div>
+                                    <div class="book-info">
+                                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
+                                        <p class="authors"><%= book.authors.join(', ') %></p>
+                                        <p class="status-badge completed-badge">Terminé</p>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p class="empty-message">Vous n'avez pas encore fini de livres</p>
+                    <% } %>
+                </div>
+            </section>
+
+        <% } else { %>
+            <!-- Utilisateur non connecté -->
+            <div class="category-section">
+                <p class="empty-message">
+                    Connectez-vous pour voir vos recommandations et vos livres terminés.
+                </p>
+            </div>
+        <% } %>
+
     </div>
 
     <%- include('../partials/footer') %>
