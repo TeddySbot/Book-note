@@ -1,2 +1,30 @@
+<footer class="site-footer">
+    <div class="footer-inner">
+
+        <div class="footer-brand">
+            <span class="footer-logo">Book Note</span>
+            <p class="footer-tagline">Votre journal de lecture personnel.</p>
+        </div>
+
+        <nav class="footer-nav">
+            <a href="/">Accueil</a>
+            <a href="/library">Bibliothèque</a>
+            <% if (user) { %>
+                <a href="/list">Mes livres</a>
+                <a href="/profil">Profil</a>
+            <% } %>
+        </nav>
+
+        <p class="footer-credit">
+            Données fournies par <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a>
+        </p>
+
+    </div>
+</footer>
+
+
+
+
+
 <script src="/js/google.js"></script>
 <script src="/js/carousel.js"></script>

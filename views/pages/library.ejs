@@ -3,9 +3,7 @@
 <head>
     <title>Book Note</title>
     <%- include('../partials/head') %>
-
 </head>
-
 
 <body>
     <%- include('../partials/header') %>
@@ -20,12 +18,28 @@
         <% if (books && books.length > 0) { %>
             <div class="book-list">
                 <% books.forEach(book => { %>
+                <%
+                    const bookStatus = userStatuses[book.key] || null;
+                    const statusLabels = {
+                        favorite:  { label: '❤️ Favori',     css: 'favorite-badge'  },
+                        reading:   { label: '📖 En cours',   css: 'reading-badge'   },
+                        completed: { label: '✅ Terminé',    css: 'completed-badge' },
+                        wishlist:  { label: '📑 À voir',     css: 'wishlist-badge'  },
+                    };
+                    const badge = bookStatus ? statusLabels[bookStatus] : null;
+                %>
                     <div class="book-card">
-                        <a href="/books<%= book.key %>"><h3><%= book.title %></h3></a>
-                        <% if (book.cover_i) { %>
-                            <img src="https://covers.openlibrary.org/b/id/<%= book.cover_i %>-L.jpg" alt="Couverture">
-                        <% } else { %>
-                            <p>Aucune couverture disponible</p>
+                        <a href="/books<%= book.key %>">
+                            <% if (book.cover_i) { %>
+                                <img src="https://covers.openlibrary.org/b/id/<%= book.cover_i %>-L.jpg" alt="Couverture">
+                            <% } else { %>
+                                <div class="no-cover">Pas de couverture</div>
+                            <% } %>
+                            <h3 ><%= book.title %></h3>
+                        </a>
+
+                        <% if (user && badge) { %>
+                            <p class="status-badge <%= badge.css %>"><%= badge.label %></p>
                         <% } %>
                     </div>
                 <% }); %>
@@ -33,8 +47,6 @@
         <% } %>
     </div>
 
-
     <%- include('../partials/footer') %>
 </body>
-
 </html>
