@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const router = express.Router();
 const { OAuth2Client } = require('google-auth-library');
 const db = require('../config/db');
@@ -251,5 +252,70 @@ router.get('/logout', (req, res) => {
         res.redirect('/');
     });
 });
+
+// ─── Auth Local : Inscription ─────────────────────────────────────────
+router.post('/auth/register', async (req, res) => {
+    const { email, password, username } = req.body;
+    if (!email || !password) return res.status(400).json({ success: false, error: 'Email et mot de passe requis' });
+
+    try {
+        const hash = await bcrypt.hash(password, 12);
+
+        db.run(
+            `INSERT INTO users (email, username) VALUES (?, ?)`,
+            [email, username || email.split('@')[0]],
+            function(err) {
+                if (err) return res.status(400).json({ success: false, error: 'Email déjà utilisé' });
+
+                const userId = this.lastID;
+                db.run(
+                    `INSERT INTO auth_providers (user_id, provider, password_hash) VALUES (?, 'local', ?)`,
+                    [userId, hash],
+                    (err2) => {
+                        if (err2) return res.status(500).json({ success: false, error: 'Erreur BD' });
+
+                        req.session.user = {
+                            db_id: userId,
+                            name: username || email.split('@')[0],
+                            email,
+                            picture: '/picture/NoK_BoK.png',
+                        };
+                        res.json({ success: true, user: req.session.user });
+                    }
+                );
+            }
+        );
+    } catch (e) {
+        res.status(500).json({ success: false, error: e.message });
+    }
+});
+
+// ─── Auth Local : Connexion ───────────────────────────────────────────
+router.post('/auth/login', (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ success: false, error: 'Email et mot de passe requis' });
+
+    db.get(`SELECT u.id, u.email, u.username, u.local, ap.password_hash
+            FROM users u JOIN auth_providers ap ON ap.user_id = u.id
+            WHERE u.email = ? AND ap.provider = 'local'`,
+        [email],
+        async (err, row) => {
+            if (err || !row) return res.status(401).json({ success: false, error: 'Email ou mot de passe incorrect' });
+
+            const valid = await bcrypt.compare(password, row.password_hash);
+            if (!valid) return res.status(401).json({ success: false, error: 'Email ou mot de passe incorrect' });
+
+            req.session.user = {
+                db_id: row.id,
+                name: row.username,
+                email: row.email,
+                picture: '/picture/NoK_BoK.png',
+                locale: row.local,
+            };
+            res.json({ success: true, user: req.session.user });
+        }
+    );
+});
+
 
 module.exports = router;

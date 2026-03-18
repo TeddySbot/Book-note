@@ -1,19 +1,56 @@
 <header class="navbar">
-        <a href="/"> <h2>Book Note</h2></a>
-        <a href="/library"><h2>Blibliothèque</h2></a>
-        <% if (user) { %>
-            <a href="/list"><h2>Mes livres</h2></a>
-        <% } %>
-        <% if (!user) { %>
-            <div id="g_id_onload" data-client_id="<%= clientId %>" data-callback="handleCredentialResponse"></div>
-            <div id="buttonDiv"></div>
-        <% } else { %>
-            <div class="user-info">
-                <a href="/profil"><img src="<%= user.picture || '/images/default-avatar.png' %>" alt="Avatar" class="avatar"></a>
+    <a href="/"><h2>Book Note</h2></a>
+    <a href="/library"><h2>Bibliothèque</h2></a>
+    <% if (user) { %>
+        <a href="/list"><h2>Mes livres</h2></a>
+    <% } %>
+
+    <% if (!user) { %>
+        <!-- Bouton Google -->
+        <div id="g_id_onload"
+             data-client_id="<%= clientId %>"
+             data-callback="handleCredentialResponse">
+        </div>
+        <div id="buttonDiv"></div>
+
+        <!-- Dropdown Login / Register -->
+        <div class="auth-dropdown">
+            <button class="auth-toggle-btn" onclick="toggleAuthDropdown()">Se connecter ▾</button>
+            <div class="auth-menu" id="authMenu">
+
+                <!-- Tabs -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchTab('login', this)">Connexion</button>
+                    <button class="auth-tab" onclick="switchTab('register', this)">Inscription</button>
+                </div>
+
+                <!-- Login -->
+                <div class="auth-form" id="tab-login">
+                    <input type="email" id="login-email" placeholder="Email" />
+                    <input type="password" id="login-password" placeholder="Mot de passe" />
+                    <p class="auth-error" id="login-error"></p>
+                    <button class="auth-submit" onclick="submitLogin()">Se connecter</button>
+                </div>
+
+                <!-- Register -->
+                <div class="auth-form hidden" id="tab-register">
+                    <input type="text" id="reg-username" placeholder="Nom d'utilisateur" />
+                    <input type="email" id="reg-email" placeholder="Email" />
+                    <input type="password" id="reg-password" placeholder="Mot de passe" />
+                    <p class="auth-error" id="reg-error"></p>
+                    <button class="auth-submit" onclick="submitRegister()">Créer un compte</button>
+                </div>
+
             </div>
-        <% } %>
+        </div>
 
-
+    <% } else { %>
+        <div class="user-info">
+            <a href="/profil">
+                <img src="<%= user.picture || '/picture/NoK_BoK.png' %>" alt="Avatar" class="avatar">
+            </a>
+        </div>
+    <% } %>
 </header>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="/js/auth.js"></script>
