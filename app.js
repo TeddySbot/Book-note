@@ -37,12 +37,14 @@ const indexRoute = require('./routes/index');
 const profilRoute = require('./routes/profil');
 const libraryRoute = require('./routes/library');
 const booksRoute = require('./routes/books');
+const listRoute = require('./routes/list');
 
 // Routes
 app.use(express.static('public'));
 app.use('/', indexRoute);
 app.use('/profil', profilRoute);
 app.use('/library', libraryRoute);
+app.use('/list', listRoute);
 app.use('/books', booksRoute);
 
 // Lancement du serveur

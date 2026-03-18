@@ -76,6 +76,28 @@ router.post('/status', (req, res) => {
     );
 });
 
+router.post('/status/delete', (req, res) => {
+    const { api_book_id } = req.body;
+    const user = req.session.user;
+
+    if (!user || !user.db_id || !api_book_id) {
+        console.log('❌ Données manquantes pour la suppression');
+        return res.status(400).json({ error: 'Données manquantes' });
+    }
+
+    db.run(
+        `DELETE FROM library_status WHERE user_id = ? AND api_book_id = ?`,
+        [user.db_id, api_book_id],
+        function (err) {
+            if (err) {
+                console.log('❌ Erreur DB lors de la suppression:', err.message);
+                return res.status(500).json({ error: err.message });
+            }
+            console.log('✅ Livre supprimé avec succès');
+            res.json({ message: 'Livre supprimé de votre collection !' });
+        }
+    );
+});
 
 
 module.exports = router;

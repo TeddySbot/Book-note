@@ -2,7 +2,7 @@
         <a href="/"> <h2>Book Note</h2></a>
         <a href="/library"><h2>Blibliothèque</h2></a>
         <% if (user) { %>
-            <a href="/profil/list"><h2>Mes livres</h2></a>
+            <a href="/list"><h2>Mes livres</h2></a>
         <% } %>
         <% if (!user) { %>
             <div id="g_id_onload" data-client_id="<%= clientId %>" data-callback="handleCredentialResponse"></div>

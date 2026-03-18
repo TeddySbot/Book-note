@@ -54,65 +54,65 @@ router.get('/', (req, res) => {
 });
 
 // Route pour afficher la liste des livres par catégories
-router.get('/list', async (req, res) => {
-    if (!req.session.user || !req.session.user.db_id) {
-        return res.redirect('/');
-    }
+// router.get('/list', async (req, res) => {
+//     if (!req.session.user || !req.session.user.db_id) {
+//         return res.redirect('/');
+//     }
 
-    try {
-        const userId = req.session.user.db_id;
+//     try {
+//         const userId = req.session.user.db_id;
 
-        db.all(
-            `SELECT api_book_id, status FROM library_status WHERE user_id = ? ORDER BY status, created_at DESC`,
-            [userId],
-            async (err, rows) => {
-                if (err) {
-                    console.error('❌ DB error:', err.message);
-                    return res.render('pages/list', {
-                        user: req.session.user,
-                        clientId: CLIENT_ID,
-                        books: {}
-                    });
-                }
+//         db.all(
+//             `SELECT api_book_id, status FROM library_status WHERE user_id = ? ORDER BY status, created_at DESC`,
+//             [userId],
+//             async (err, rows) => {
+//                 if (err) {
+//                     console.error('❌ DB error:', err.message);
+//                     return res.render('pages/list', {
+//                         user: req.session.user,
+//                         clientId: CLIENT_ID,
+//                         books: {}
+//                     });
+//                 }
 
-                const booksFormatted = {
-                    wishlist: [],
-                    reading: [],
-                    completed: [],
-                    favorite: []
-                };
+//                 const booksFormatted = {
+//                     wishlist: [],
+//                     reading: [],
+//                     completed: [],
+//                     favorite: []
+//                 };
 
-                const bookDetails = await Promise.all(
-                    (rows || []).map(async (row) => {
-                        const bookInfo = await getBookFromOpenLibrary(row.api_book_id);
-                        if (bookInfo) {
-                            return { ...bookInfo, status: row.status };
-                        }
-                        return null;
-                    })
-                );
+//                 const bookDetails = await Promise.all(
+//                     (rows || []).map(async (row) => {
+//                         const bookInfo = await getBookFromOpenLibrary(row.api_book_id);
+//                         if (bookInfo) {
+//                             return { ...bookInfo, status: row.status };
+//                         }
+//                         return null;
+//                     })
+//                 );
 
-                bookDetails.forEach(book => {
-                    if (book && booksFormatted[book.status]) {
-                        booksFormatted[book.status].push(book);
-                    }
-                });
+//                 bookDetails.forEach(book => {
+//                     if (book && booksFormatted[book.status]) {
+//                         booksFormatted[book.status].push(book);
+//                     }
+//                 });
 
-                res.render('pages/list', {
-                    user: req.session.user,
-                    clientId: CLIENT_ID,
-                    books: booksFormatted
-                });
-            }
-        );
-    } catch (error) {
-        console.error('Erreur:', error);
-        res.render('pages/list', {
-            user: req.session.user,
-            clientId: CLIENT_ID,
-            books: {}
-        });
-    }
-});
+//                 res.render('pages/list', {
+//                     user: req.session.user,
+//                     clientId: CLIENT_ID,
+//                     books: booksFormatted
+//                 });
+//             }
+//         );
+//     } catch (error) {
+//         console.error('Erreur:', error);
+//         res.render('pages/list', {
+//             user: req.session.user,
+//             clientId: CLIENT_ID,
+//             books: {}
+//         });
+//     }
+// });
 
 module.exports = router;
