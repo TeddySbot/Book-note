@@ -11,66 +11,76 @@
 
         <% if (user) { %>
 
-            <!-- ✨ RECOMMANDATIONS -->
-            <section class="category-section">
-                <h2>✨ Recommandé pour vous (<%= recommendations.length %>)</h2>
-                <div class="category-container">
-                    <% if (recommendations.length > 0) { %>
-                        <div class="books-grid">
-                            <% recommendations.forEach(book => { %>
-                                <div class="book-item">
-                                    <div class="book-cover">
-                                        <% if (book.coverUrl) { %>
-                                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>" loading="lazy">
-                                        <% } else { %>
-                                            <div class="no-cover">Pas de couverture</div>
-                                        <% } %>
-                                    </div>
-                                    <div class="book-info">
-                                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
-                                        <p class="authors"><%= book.authors.join(', ') %></p>
-                                        <p class="status-badge favorite-badge">Recommandé</p>
-                                    </div>
-                                </div>
-                            <% }) %>
-                        </div>
-                    <% } else { %>
-                        <p class="empty-message">
-                            Ajoutez des livres en <strong>favoris</strong> ou marquez-les
-                            <strong>terminés</strong> pour recevoir des recommandations !
-                        </p>
-                    <% } %>
-                </div>
-            </section>
+            <!-- Exemple pour la section Recommandations -->
+<section class="category-section">
+    <h2>✨ Recommandé pour vous (<%= recommendations.length %>)</h2>
 
-            <!-- ✅ DÉJÀ LU -->
-            <section class="category-section">
-                <h2>✅ Déjà Lu (<%= completedBooks.length %>)</h2>
-                <div class="category-container">
-                    <% if (completedBooks.length > 0) { %>
-                        <div class="books-grid">
-                            <% completedBooks.forEach(book => { %>
-                                <div class="book-item" data-book-key="<%= book.key %>">
-                                    <div class="book-cover">
-                                        <% if (book.coverUrl) { %>
-                                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>">
-                                        <% } else { %>
-                                            <div class="no-cover">Pas de couverture</div>
-                                        <% } %>
-                                    </div>
-                                    <div class="book-info">
-                                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
-                                        <p class="authors"><%= book.authors.join(', ') %></p>
-                                        <p class="status-badge completed-badge">Terminé</p>
-                                    </div>
-                                </div>
-                            <% }) %>
-                        </div>
-                    <% } else { %>
-                        <p class="empty-message">Vous n'avez pas encore fini de livres</p>
-                    <% } %>
+    <% if (recommendations.length > 0) { %>
+    <div class="carousel-wrapper">
+        <button class="carousel-btn btn-prev" aria-label="Précédent">&#8592;</button>
+        <div class="carousel-track-container">
+            <div class="books-grid">
+                <% recommendations.forEach(book => { %>
+                <div class="book-item">
+                    <div class="book-cover">
+                        <% if (book.coverUrl) { %>
+                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>" loading="lazy">
+                        <% } else { %>
+                            <div class="no-cover">Pas de couverture</div>
+                        <% } %>
+                    </div>
+                    <div class="book-info">
+                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
+                        <p class="authors"><%= book.authors.join(', ') %></p>
+                        <p class="status-badge favorite-badge">Recommandé</p>
+                    </div>
                 </div>
-            </section>
+                <% }) %>
+            </div>
+        </div>
+        <button class="carousel-btn btn-next" aria-label="Suivant">&#8594;</button>
+    </div>
+    <% } else { %>
+        <p class="empty-message">
+            Ajoutez des livres en <strong>favoris</strong> ou marquez-les
+            <strong>terminés</strong> pour recevoir des recommandations !
+        </p>
+    <% } %>
+</section>
+
+<!-- Même structure pour Déjà Lu -->
+<section class="category-section">
+    <h2>✅ Déjà Lu (<%= completedBooks.length %>)</h2>
+
+    <% if (completedBooks.length > 0) { %>
+    <div class="carousel-wrapper">
+        <button class="carousel-btn btn-prev" aria-label="Précédent">&#8592;</button>
+        <div class="carousel-track-container">
+            <div class="books-grid">
+                <% completedBooks.forEach(book => { %>
+                <div class="book-item" data-book-key="<%= book.key %>">
+                    <div class="book-cover">
+                        <% if (book.coverUrl) { %>
+                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>">
+                        <% } else { %>
+                            <div class="no-cover">Pas de couverture</div>
+                        <% } %>
+                    </div>
+                    <div class="book-info">
+                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
+                        <p class="authors"><%= book.authors.join(', ') %></p>
+                        <p class="status-badge completed-badge">Terminé</p>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+        </div>
+        <button class="carousel-btn btn-next" aria-label="Suivant">&#8594;</button>
+    </div>
+    <% } else { %>
+        <p class="empty-message">Vous n'avez pas encore fini de livres</p>
+    <% } %>
+</section>
 
         <% } else { %>
             <!-- Utilisateur non connecté -->

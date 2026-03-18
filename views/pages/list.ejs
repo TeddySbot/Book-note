@@ -30,7 +30,6 @@
                                     </div>
                                     <div class="book-info">
                                         <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
-                                        <p class="authors"><%= book.authors.join(', ') %></p>
                                         <p class="status-badge favorite-badge">Favori</p>
                                         <button class="btn-remove" data-book-key="<%= book.key %>" data-status="favorite">Supprimer</button>
                                     </div>
@@ -60,7 +59,6 @@
                                     </div>
                                     <div class="book-info">
                                         <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
-                                        <p class="authors"><%= book.authors.join(', ') %></p>
                                         <p class="status-badge reading-badge">En cours</p>
                                         <button class="btn-remove" data-book-key="<%= book.key %>" data-status="reading">Supprimer</button>
                                     </div>
@@ -90,7 +88,6 @@
                                     </div>
                                     <div class="book-info">
                                         <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
-                                        <p class="authors"><%= book.authors.join(', ') %></p>
                                         <p class="status-badge completed-badge">Terminé</p>
                                         <button class="btn-remove" data-book-key="<%= book.key %>" data-status="completed">Supprimer</button>
                                     </div>
@@ -120,7 +117,6 @@
                                     </div>
                                     <div class="book-info">
                                         <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
-                                        <p class="authors"><%= book.authors.join(', ') %></p>
                                         <p class="status-badge wishlist-badge">À voir</p>
                                         <button class="btn-remove" data-book-key="<%= book.key %>" data-status="wishlist">Supprimer</button>
                                     </div>

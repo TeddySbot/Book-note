@@ -22,6 +22,18 @@
         <p>Aucune image disponible.</p>
     <% } %>
 
+    <% if (user) { %>
+        <label for="bookStatus">Statut :</label>
+        <select id="bookStatus" data-book-id="<%= book.key %>">
+            <option value="">-- Choisir un statut --</option>
+            <option value="wishlist">À voir</option>
+            <option value="reading">En cours de lecture</option>
+            <option value="completed">Terminé</option>
+            <option value="favorite">Favori</option>
+        </select>
+    <% } %>
+
+
     <!-- Description -->
     <h2>Description</h2>
     <p>
@@ -81,17 +93,7 @@
     <% } %>
 
 
-    <% if (user) { %>
-        <label for="bookStatus">Statut :</label>
-        <select id="bookStatus" data-book-id="<%= book.key %>">
-            <option value="">-- Choisir un statut --</option>
-            <option value="wishlist">À voir</option>
-            <option value="reading">En cours de lecture</option>
-            <option value="completed">Terminé</option>
-            <option value="favorite">Favori</option>
-        </select>
-    <% } %>
-
+    
     <script src="/js/books.js"></script>
 
 
