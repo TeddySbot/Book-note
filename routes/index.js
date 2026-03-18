@@ -91,7 +91,7 @@ router.get('/', async (req, res) => {
 
             if (userBooks.length > 0) {
                 const subjectsArrays = await Promise.all(
-                    userBooks.slice(0, 5).map(row => getBookSubjects(row.api_book_id))
+                    userBooks.slice(0, 10).map(row => getBookSubjects(row.api_book_id))
                 );
 
                 const allSubjects = [...new Set(subjectsArrays.flat())].slice(0, 5);
