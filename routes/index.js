@@ -33,13 +33,11 @@ async function searchBySubject(subject) {
     }
 }
 
-// ─── Récupère les détails d'un livre depuis OpenLibrary ───────────────
 async function getBookDetails(bookKey) {
     try {
         const response = await fetch(`https://openlibrary.org${bookKey}.json`);
         const data = await response.json();
 
-        // Auteurs
         let authors = [];
         if (data.authors?.length > 0) {
             const authorPromises = data.authors.map(async (a) => {
@@ -54,7 +52,6 @@ async function getBookDetails(bookKey) {
             authors = await Promise.all(authorPromises);
         }
 
-        // Couverture
         const coverUrl = data.covers?.length > 0
             ? `https://covers.openlibrary.org/b/id/${data.covers[0]}-M.jpg`
             : null;
@@ -70,13 +67,50 @@ async function getBookDetails(bookKey) {
     }
 }
 
+// Cache pour les tendances (évite de refaire l'appel à chaque visite)
+let trendingCache = { books: [], fetchedAt: 0 };
+const TRENDING_TTL = 1000 * 60 * 60; // 1 heure
+
+async function getTrendingBooks() {
+    const now = Date.now();
+    if (trendingCache.books.length > 0 && now - trendingCache.fetchedAt < TRENDING_TTL) {
+        return trendingCache.books;
+    }
+
+    try {
+        const response = await fetch(
+            'https://openlibrary.org/search.json?q=subject:fiction&sort=rating&limit=20&fields=key,title,author_name,cover_i'
+        );
+        const data = await response.json();
+
+        const books = (data.docs || [])
+            .filter(b => b.cover_i)
+            .slice(0, 12)
+            .map(b => ({
+                key: b.key,
+                title: b.title,
+                author: b.author_name ? b.author_name[0] : 'Auteur inconnu',
+                coverUrl: `https://covers.openlibrary.org/b/id/${b.cover_i}-M.jpg`,
+            }));
+
+        trendingCache = { books, fetchedAt: now };
+        return books;
+    } catch {
+        return [];
+    }
+}
+
 // ─── Page d'accueil ───────────────────────────────────────────────────
 router.get('/', async (req, res) => {
     const user = req.session.user || null;
     let recommendations = [];
     let completedBooks = [];
+    let trendingBooks = [];
 
     try {
+        // Tendances : toujours chargées, connecté ou non
+        trendingBooks = await getTrendingBooks();
+
         if (user?.db_id) {
 
             // ── Recommandations ──────────────────────────────────────
@@ -145,6 +179,7 @@ router.get('/', async (req, res) => {
             clientId: CLIENT_ID,
             recommendations,
             completedBooks,
+            trendingBooks,
         });
 
     } catch (err) {
@@ -154,6 +189,7 @@ router.get('/', async (req, res) => {
             clientId: CLIENT_ID,
             recommendations: [],
             completedBooks: [],
+            trendingBooks: [],
         });
     }
 });

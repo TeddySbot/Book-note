@@ -3,116 +3,73 @@ const router = express.Router();
 const CLIENT_ID = '754068118410-8s00fbmh36hst5e1aclmkf7v2ucp6mnb.apps.googleusercontent.com';
 const db = require('../config/db');
 
-// Fonction helper pour récupérer les infos d'un livre depuis OpenLibrary
-async function getBookFromOpenLibrary(bookKey) {
-    try {
-        const response = await fetch(`https://openlibrary.org${bookKey}.json`);
-        const bookData = await response.json();
-
-        let coverUrl = null;
-        if (bookData.covers && bookData.covers.length > 0) {
-            coverUrl = `https://covers.openlibrary.org/b/id/${bookData.covers[0]}-L.jpg`;
-        }
-
-        let authors = [];
-        if (bookData.authors && bookData.authors.length > 0) {
-            const authorPromises = bookData.authors.map(async (authorObj) => {
-                try {
-                    const authorResponse = await fetch(`https://openlibrary.org${authorObj.author.key}.json`);
-                    const authorData = await authorResponse.json();
-                    return authorData.name || 'Auteur inconnu';
-                } catch (error) {
-                    return 'Auteur inconnu';
-                }
-            });
-            authors = await Promise.all(authorPromises);
-        }
-
-        return {
-            key: bookKey,
-            title: bookData.title || 'Titre inconnu',
-            authors: authors,
-            coverUrl: coverUrl,
-            isbn: bookData.isbn ? bookData.isbn[0] : null,
-            description: bookData.description || 'Pas de description'
-        };
-    } catch (error) {
-        console.error('Erreur OpenLibrary:', error);
-        return null;
-    }
-}
-
-router.get('/', (req, res) => {
-    if (!req.session.user){
+router.get('/', async (req, res) => {
+    if (!req.session.user) {
         return res.redirect('/');
     }
 
-    res.render('pages/profil', {
-        user: req.session.user || null,
-        clientId: CLIENT_ID
-    });
+    const userId = req.session.user.db_id;
+
+    try {
+        // Compte par statut
+        const stats = await new Promise((resolve, reject) => {
+            db.all(
+                `SELECT status, COUNT(*) as count
+                 FROM library_status
+                 WHERE user_id = ?
+                 GROUP BY status`,
+                [userId],
+                (err, rows) => err ? reject(err) : resolve(rows)
+            );
+        });
+
+        // Date d'inscription
+        const userInfo = await new Promise((resolve, reject) => {
+            db.get(
+                `SELECT created_at FROM users WHERE id = ?`,
+                [userId],
+                (err, row) => err ? reject(err) : resolve(row)
+            );
+        });
+
+        // Dernier livre ajouté
+        const lastBook = await new Promise((resolve, reject) => {
+            db.get(
+                `SELECT api_book_id, status, updated_at
+                 FROM library_status
+                 WHERE user_id = ?
+                 ORDER BY updated_at DESC
+                 LIMIT 1`,
+                [userId],
+                (err, row) => err ? reject(err) : resolve(row)
+            );
+        });
+
+        // Formater les stats en objet simple
+        const statsMap = { favorite: 0, reading: 0, completed: 0, wishlist: 0 };
+        stats.forEach(row => { statsMap[row.status] = row.count; });
+        const totalBooks = Object.values(statsMap).reduce((a, b) => a + b, 0);
+
+        res.render('pages/profil', {
+            user: req.session.user,
+            clientId: CLIENT_ID,
+            stats: statsMap,
+            totalBooks,
+            memberSince: userInfo?.created_at || null,
+            lastBook: lastBook || null,
+        });
+
+    } catch (err) {
+        console.error('Erreur profil:', err);
+        res.render('pages/profil', {
+            user: req.session.user,
+            clientId: CLIENT_ID,
+            stats: { favorite: 0, reading: 0, completed: 0, wishlist: 0 },
+            totalBooks: 0,
+            memberSince: null,
+            lastBook: null,
+        });
+    }
 });
-
-// Route pour afficher la liste des livres par catégories
-// router.get('/list', async (req, res) => {
-//     if (!req.session.user || !req.session.user.db_id) {
-//         return res.redirect('/');
-//     }
-
-//     try {
-//         const userId = req.session.user.db_id;
-
-//         db.all(
-//             `SELECT api_book_id, status FROM library_status WHERE user_id = ? ORDER BY status, created_at DESC`,
-//             [userId],
-//             async (err, rows) => {
-//                 if (err) {
-//                     console.error('❌ DB error:', err.message);
-//                     return res.render('pages/list', {
-//                         user: req.session.user,
-//                         clientId: CLIENT_ID,
-//                         books: {}
-//                     });
-//                 }
-
-//                 const booksFormatted = {
-//                     wishlist: [],
-//                     reading: [],
-//                     completed: [],
-//                     favorite: []
-//                 };
-
-//                 const bookDetails = await Promise.all(
-//                     (rows || []).map(async (row) => {
-//                         const bookInfo = await getBookFromOpenLibrary(row.api_book_id);
-//                         if (bookInfo) {
-//                             return { ...bookInfo, status: row.status };
-//                         }
-//                         return null;
-//                     })
-//                 );
-
-//                 bookDetails.forEach(book => {
-//                     if (book && booksFormatted[book.status]) {
-//                         booksFormatted[book.status].push(book);
-//                     }
-//                 });
-
-//                 res.render('pages/list', {
-//                     user: req.session.user,
-//                     clientId: CLIENT_ID,
-//                     books: booksFormatted
-//                 });
-//             }
-//         );
-//     } catch (error) {
-//         console.error('Erreur:', error);
-//         res.render('pages/list', {
-//             user: req.session.user,
-//             clientId: CLIENT_ID,
-//             books: {}
-//         });
-//     }
-// });
 
 module.exports = router;

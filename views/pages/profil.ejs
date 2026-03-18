@@ -1,34 +1,95 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>Profil</title>
+    <title>Profil — Book Note</title>
     <%- include('../partials/head') %>
-
 </head>
 <body>
     <%- include('../partials/header') %>
 
-<div class="profile-container">
+    <div class="profil-page">
 
-    <h1>Profil utilisateur</h1>
-
-    <div class="profile-header">
-        <img src="<%= user.picture || '/images/default-avatar.png' %>" alt="Avatar" class="avatar">
-        <div>
-            <h2><%= user.name %></h2>
-            <p><%= user.email %></p>
+        <!-- Identité -->
+        <div class="profil-identity">
+            <img src="<%= user.picture || '/images/default-avatar.png' %>"
+                 alt="Avatar" class="profil-avatar">
+            <div class="profil-identity-info">
+                <h1><%= user.name %></h1>
+                <p class="profil-email"><%= user.email %></p>
+                <% if (user.locale) { %>
+                    <p>Langue : <%= user.locale %></p>
+                <% } %>
+                <% if (memberSince) { %>
+                    <p class="profil-member-since">
+                        Membre depuis le <%= new Date(memberSince).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+                    </p>
+                <% } %>
+            </div>
         </div>
+
+        <!-- Stats -->
+        <div class="profil-stats">
+            <div class="stat-card stat-total">
+                <span class="stat-number"><%= totalBooks %></span>
+                <span class="stat-label">Total livres</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number"><%= stats.completed %></span>
+                <span class="stat-label">✅ Terminés</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number"><%= stats.reading %></span>
+                <span class="stat-label">📖 En cours</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number"><%= stats.favorite %></span>
+                <span class="stat-label">❤️ Favoris</span>
+            </div>
+        </div>
+
+        <!-- Détails compte -->
+        <div class="profil-section">
+            <h2>Résumé de la collection</h2>
+
+            <div class="profil-detail-row">
+                <span class="detail-key">📑 À voir (wishlist)</span>
+                <span class="detail-val"><%= stats.wishlist %> livre<%= stats.wishlist > 1 ? 's' : '' %></span>
+            </div>
+            <div class="profil-detail-row">
+                <span class="detail-key">📖 En cours de lecture</span>
+                <span class="detail-val"><%= stats.reading %> livre<%= stats.reading > 1 ? 's' : '' %></span>
+            </div>
+            <div class="profil-detail-row">
+                <span class="detail-key">✅ Livres terminés</span>
+                <span class="detail-val"><%= stats.completed %> livre<%= stats.completed > 1 ? 's' : '' %></span>
+            </div>
+            <div class="profil-detail-row">
+                <span class="detail-key">❤️ Favoris</span>
+                <span class="detail-val"><%= stats.favorite %> livre<%= stats.favorite > 1 ? 's' : '' %></span>
+            </div>
+
+            <% if (lastBook) { %>
+            <div class="profil-detail-row">
+                <span class="detail-key">🕐 Dernière activité</span>
+                <span class="detail-val">
+                    <%= new Date(lastBook.updated_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+                </span>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- Déconnexion -->
+        <div class="profil-section">
+            <h2>Compte</h2>
+            <div class="profil-detail-row">
+                <span class="detail-key">Connecté via</span>
+                <span class="detail-val">Google</span>
+            </div>
+            <a href="/logout" class="profil-logout">Se déconnecter</a>
+        </div>
+
     </div>
 
-    <ul class="profile-details">
-        <li><strong>Langue :</strong> <%= user.locale %></li>
-    </ul>
-
-    <a href="/logout" class="btn-logout">Se déconnecter</a>
-
-</div>
     <%- include('../partials/footer') %>
-
 </body>
-
 </html>

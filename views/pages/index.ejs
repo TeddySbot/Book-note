@@ -1,96 +1,171 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>Book Note</title>
+    <title>Book Note — Votre journal de lecture</title>
     <%- include('../partials/head') %>
 </head>
 <body>
     <%- include('../partials/header') %>
 
+    <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+    <section class="hero">
+        <div class="hero-inner">
+            <p class="hero-eyebrow">Votre journal de lecture personnel</p>
+            <h1 class="hero-title">
+                Chaque livre lu<br>
+                <em>mérite d'être retenu.</em>
+            </h1>
+            <p class="hero-sub">
+                Suivez vos lectures, organisez vos favoris et
+                découvrez vos prochains coups de cœur.
+            </p>
+
+            <% if (!user) { %>
+                <div class="hero-cta">
+                    <p class="hero-cta-hint">Connexion gratuite via Google</p>
+                </div>
+            <% } else { %>
+                <a href="/list" class="btn-hero">Voir ma collection →</a>
+            <% } %>
+        </div>
+
+        <div class="hero-decoration">
+            <div class="deco-spine"></div>
+            <div class="deco-spine"></div>
+            <div class="deco-spine"></div>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════ FEATURES ════════════════════════════ -->
+    <% if (!user) { %>
+    <section class="features">
+        <div class="feature-card">
+            <span class="feature-icon">📚</span>
+            <h3>Organisez</h3>
+            <p>Classez vos livres en favoris, en cours, terminés ou à lire.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">✨</span>
+            <h3>Découvrez</h3>
+            <p>Recevez des recommandations basées sur vos goûts littéraires.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">🔍</span>
+            <h3>Explorez</h3>
+            <p>Accédez à des millions de livres grâce à Open Library.</p>
+        </div>
+    </section>
+    <% } %>
+
     <div class="list-container">
 
         <% if (user) { %>
 
-            <!-- Exemple pour la section Recommandations -->
-<section class="category-section">
-    <h2>✨ Recommandé pour vous (<%= recommendations.length %>)</h2>
+            <!-- ══════════════════ RECOMMANDATIONS ══════════════════ -->
+            <section class="trending-section">
+                <h2>✨ Recommandé pour vous (<%= recommendations.length %>)</h2>
+                <div class ="trending-header"></div>
 
-    <% if (recommendations.length > 0) { %>
-    <div class="carousel-wrapper">
-        <button class="carousel-btn btn-prev" aria-label="Précédent">&#8592;</button>
-        <div class="carousel-track-container">
-            <div class="books-grid">
-                <% recommendations.forEach(book => { %>
-                <div class="book-item">
-                    <div class="book-cover">
-                        <% if (book.coverUrl) { %>
-                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>" loading="lazy">
-                        <% } else { %>
-                            <div class="no-cover">Pas de couverture</div>
-                        <% } %>
+                <% if (recommendations.length > 0) { %>
+                <div class="carousel-wrapper">
+                    <button class="carousel-btn btn-prev" aria-label="Précédent">&#8592;</button>
+                    <div class="carousel-track-container">
+                        <div class="books-grid">
+                            <% recommendations.forEach(book => { %>
+                            <div class="book-item">
+                                <div class="book-cover">
+                                    <% if (book.coverUrl) { %>
+                                        <img src="<%= book.coverUrl %>" alt="<%= book.title %>" loading="lazy">
+                                    <% } else { %>
+                                        <div class="no-cover">Pas de couverture</div>
+                                    <% } %>
+                                </div>
+                                <div class="book-info">
+                                    <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
+                                    <p class="status-badge favorite-badge">Recommandé</p>
+                                </div>
+                            </div>
+                            <% }) %>
+                        </div>
                     </div>
-                    <div class="book-info">
-                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
-                        <p class="status-badge favorite-badge">Recommandé</p>
-                    </div>
+                    <button class="carousel-btn btn-next" aria-label="Suivant">&#8594;</button>
                 </div>
-                <% }) %>
-            </div>
-        </div>
-        <button class="carousel-btn btn-next" aria-label="Suivant">&#8594;</button>
-    </div>
-    <% } else { %>
-        <p class="empty-message">
-            Ajoutez des livres en <strong>favoris</strong> ou marquez-les
-            <strong>terminés</strong> pour recevoir des recommandations !
-        </p>
-    <% } %>
-</section>
+                <% } else { %>
+                    <p class="empty-message">
+                        Ajoutez des livres en <strong>favoris</strong> ou marquez-les
+                        <strong>terminés</strong> pour recevoir des recommandations !
+                    </p>
+                <% } %>
+            </section>
 
-<!-- Même structure pour Déjà Lu -->
-<section class="category-section">
-    <h2>✅ Déjà Lu (<%= completedBooks.length %>)</h2>
-
-    <% if (completedBooks.length > 0) { %>
-    <div class="carousel-wrapper">
-        <button class="carousel-btn btn-prev" aria-label="Précédent">&#8592;</button>
-        <div class="carousel-track-container">
-            <div class="books-grid">
-                <% completedBooks.forEach(book => { %>
-                <div class="book-item" data-book-key="<%= book.key %>">
-                    <div class="book-cover">
-                        <% if (book.coverUrl) { %>
-                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>">
-                        <% } else { %>
-                            <div class="no-cover">Pas de couverture</div>
-                        <% } %>
+            <!-- ══════════════════ DÉJÀ LU ══════════════════ -->
+            <section class="trending-section">
+                <h2>✅ Déjà Lu (<%= completedBooks.length %>)</h2>
+                <div class ="trending-header"></div>
+                <% if (completedBooks.length > 0) { %>
+                <div class="carousel-wrapper">
+                    <button class="carousel-btn btn-prev" aria-label="Précédent">&#8592;</button>
+                    <div class="carousel-track-container">
+                        <div class="books-grid">
+                            <% completedBooks.forEach(book => { %>
+                            <div class="book-item" data-book-key="<%= book.key %>">
+                                <div class="book-cover">
+                                    <% if (book.coverUrl) { %>
+                                        <img src="<%= book.coverUrl %>" alt="<%= book.title %>">
+                                    <% } else { %>
+                                        <div class="no-cover">Pas de couverture</div>
+                                    <% } %>
+                                </div>
+                                <div class="book-info">
+                                    <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
+                                </div>
+                            </div>
+                            <% }) %>
+                        </div>
                     </div>
-                    <div class="book-info">
-                        <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
-                        <p class="status-badge completed-badge">Terminé</p>
-                    </div>
+                    <button class="carousel-btn btn-next" aria-label="Suivant">&#8594;</button>
                 </div>
-                <% }) %>
-            </div>
-        </div>
-        <button class="carousel-btn btn-next" aria-label="Suivant">&#8594;</button>
-    </div>
-    <% } else { %>
-        <p class="empty-message">Vous n'avez pas encore fini de livres</p>
-    <% } %>
-</section>
+                <% } else { %>
+                    <p class="empty-message">Vous n'avez pas encore fini de livres</p>
+                <% } %>
+            </section>
 
-        <% } else { %>
-            <!-- Utilisateur non connecté -->
-            <div class="category-section">
-                <p class="empty-message">
-                    Connectez-vous pour voir vos recommandations et vos livres terminés.
-                </p>
-            </div>
         <% } %>
 
     </div>
 
+    <!-- ═══════════════════════════ TENDANCES ═══════════════════════════ -->
+    <% if (trendingBooks && trendingBooks.length > 0) { %>
+    <section class="trending-section">
+        <div class="trending-header">
+            <h2>📖 Tendances du moment</h2>
+            <a href="/library" class="trending-more">Voir la bibliothèque →</a>
+        </div>
+
+        <div class="trending-carousel-wrapper">
+            <button class="carousel-btn btn-prev" aria-label="Précédent">&#8592;</button>
+            <div class="carousel-track-container">
+                <div class="books-grid trending-grid">
+                    <% trendingBooks.forEach(book => { %>
+                    <div class="book-item trending-item">
+                        <div class="book-cover">
+                            <img src="<%= book.coverUrl %>" alt="<%= book.title %>" loading="lazy">
+                        </div>
+                        <div class="book-info">
+                            <h3><a href="/books<%= book.key %>"><%= book.title %></a></h3>
+                            <p class="authors"><%= book.author %></p>
+                        </div>
+                    </div>
+                    <% }) %>
+                </div>
+            </div>
+            <button class="carousel-btn btn-next" aria-label="Suivant">&#8594;</button>
+        </div>
+    </section>
+    <% } %>
+
     <%- include('../partials/footer') %>
+
+    <script src="/js/list.js"></script>
 </body>
 </html>
