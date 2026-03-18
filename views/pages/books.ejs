@@ -3,36 +3,59 @@
 <head>
     <title>Book Note</title>
     <%- include('../partials/head') %>
-
-
 </head>
 <body>
     <%- include('../partials/header') %>
-
 
 <div class="book-container">
 
     <!-- Titre -->
     <h1><%= book.title %></h1>
 
-    <!-- Image de couverture -->
+    <!-- Statut + couverture (float right) -->
+    <% if (user) { %>
+        <%
+            const statusConfig = {
+                wishlist:  { label: '📑 À voir',    css: 'wishlist-badge'  },
+                reading:   { label: '📖 En cours',  css: 'reading-badge'   },
+                completed: { label: '✅ Terminé',   css: 'completed-badge' },
+                favorite:  { label: '❤️ Favori',    css: 'favorite-badge'  },
+            };
+            const current = currentStatus ? statusConfig[currentStatus] : null;
+        %>
+        <div class="book-status-block">
+
+            <% if (current) { %>
+                <div class="current-status">
+                    <span class="status-label">Statut actuel :</span>
+                    <span class="status-badge <%= current.css %>"><%= current.label %></span>
+                </div>
+            <% } %>
+
+            <label for="bookStatus"><%= current ? 'Modifier le statut' : 'Ajouter à ma collection' %> :</label>
+            <select id="bookStatus" data-book-id="<%= book.key %>">
+                <option value="">-- Choisir un statut --</option>
+                <option value="wishlist"  <%= currentStatus === 'wishlist'  ? 'selected' : '' %>>📑 À voir</option>
+                <option value="reading"   <%= currentStatus === 'reading'   ? 'selected' : '' %>>📖 En cours de lecture</option>
+                <option value="completed" <%= currentStatus === 'completed' ? 'selected' : '' %>>✅ Terminé</option>
+                <option value="favorite"  <%= currentStatus === 'favorite'  ? 'selected' : '' %>>❤️ Favori</option>
+            </select>
+
+            <% if (currentStatus) { %>
+                <button id="removeStatus" data-book-id="<%= book.key %>" class="btn-remove-status">
+                    Retirer de ma collection
+                </button>
+            <% } %>
+
+        </div>
+    <% } %>
+
+    <!-- Couverture (float right) -->
     <% if (coverUrl) { %>
         <img class="book-cover" src="<%= coverUrl %>" alt="Couverture du livre">
     <% } else { %>
-        <p>Aucune image disponible.</p>
+        <div class="no-cover-placeholder">Aucune image disponible.</div>
     <% } %>
-
-    <% if (user) { %>
-        <label for="bookStatus">Statut :</label>
-        <select id="bookStatus" data-book-id="<%= book.key %>">
-            <option value="">-- Choisir un statut --</option>
-            <option value="wishlist">À voir</option>
-            <option value="reading">En cours de lecture</option>
-            <option value="completed">Terminé</option>
-            <option value="favorite">Favori</option>
-        </select>
-    <% } %>
-
 
     <!-- Description -->
     <h2>Description</h2>
@@ -92,15 +115,11 @@
         </ul>
     <% } %>
 
-
-    
-    <script src="/js/books.js"></script>
-
-
-
 </div>
-    <%- include('../partials/footer') %>
+
+<%- include('../partials/footer') %>
+
+<script src="/js/books.js"></script>
 
 </body>
-
 </html>

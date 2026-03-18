@@ -10,6 +10,7 @@ const db = require('../config/db');
 router.get('/:type/:id', async (req, res) => {
 
     const bookKey = `/${req.params.type}/${req.params.id}`;
+    const user = req.session.user || null;
 
     try {
         const response = await fetch(`https://openlibrary.org${bookKey}.json`);
@@ -28,19 +29,32 @@ router.get('/:type/:id', async (req, res) => {
                     const authorData = await authorResponse.json();
                     return authorData.name || 'Auteur inconnu';
                 } catch (error) {
-                    console.error('Erreur lors de la récupération de l\'auteur:', error);
                     return 'Auteur inconnu';
                 }
             });
             authors = await Promise.all(authorPromises);
         }
 
-      
+        let currentStatus = null;
+        if (user && user.db_id) {
+            await new Promise((resolve) => {
+                db.get(
+                    `SELECT status FROM library_status WHERE user_id = ? AND api_book_id = ?`,
+                    [user.db_id, bookKey],
+                    (err, row) => {
+                        if (!err && row) currentStatus = row.status;
+                        resolve();
+                    }
+                );
+            });
+        }
+
         res.render('pages/books', {
             book: bookData,
             coverUrl,
             authors,
-            user: req.session.user || null,
+            user,
+            currentStatus,   
             clientId: CLIENT_ID,
         });
 
@@ -49,7 +63,6 @@ router.get('/:type/:id', async (req, res) => {
         res.status(500).send('Erreur lors de la récupération du livre.');
     }
 });
-
 
 router.post('/status', (req, res) => {
     const { api_book_id, status } = req.body;
