@@ -5,8 +5,8 @@ const path = require('path');
 const session = require('express-session');
 const app = express();
 
-const CLIENT_ID = '754068118410-8s00fbmh36hst5e1aclmkf7v2ucp6mnb.apps.googleusercontent.com';
-
+require('dotenv').config(); // À mettre tout en haut
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
 // Définir EJS comme moteur de vues
 app.set('view engine', 'ejs');
