@@ -48,4 +48,23 @@ function displayStats() {
     console.log(`📚 Total de livres dans votre collection: ${totalBooks}`);
 }
 
+// Gestion des carrousels
+document.querySelectorAll('.carousel-wrapper, .trending-carousel-wrapper').forEach(wrapper => {
+    const btnNext = wrapper.querySelector('.btn-next');
+    const btnPrev = wrapper.querySelector('.btn-prev');
+    const track = wrapper.querySelector('.carousel-track-container');
+
+    if (btnNext && btnPrev && track) {
+        btnNext.addEventListener('click', () => {
+            const scrollAmount = track.clientWidth * 0.8; 
+            track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+
+        btnPrev.addEventListener('click', () => {
+            const scrollAmount = track.clientWidth * 0.8;
+            track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
+    }
+});
+
 window.addEventListener('load', displayStats);
