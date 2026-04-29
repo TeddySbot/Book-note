@@ -1,14 +1,21 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// routes/library.js — Page d'exploration de livres via l'API OpenLibrary
+// ═══════════════════════════════════════════════════════════════════════════════
+
 const express = require('express');
 const router = express.Router();
 const CLIENT_ID = '754068118410-8s00fbmh36hst5e1aclmkf7v2ucp6mnb.apps.googleusercontent.com';
 const db = require('../config/db');
 
+// ── GET /library ──────────────────────────────────────────────────────────────
+// Charge une liste de livres depuis OpenLibrary et pré-charge les statuts de
+// l'utilisateur connecté pour afficher les badges dans la liste sans appel supplémentaire.
 router.get('/', async (req, res) => {
     const user = req.session.user || null;
     let userStatuses = {}; // { "/works/OL123W": "favorite", ... }
 
     try {
-        // Récupère les statuts de l'utilisateur connecté
+        // Pré-charge tous les statuts de l'utilisateur en une seule requête
         if (user?.db_id) {
             const rows = await new Promise((resolve, reject) => {
                 db.all(
@@ -17,7 +24,6 @@ router.get('/', async (req, res) => {
                     (err, rows) => err ? reject(err) : resolve(rows)
                 );
             });
-            // Transforme en objet { bookKey: status }
             rows.forEach(row => {
                 userStatuses[row.api_book_id] = row.status;
             });

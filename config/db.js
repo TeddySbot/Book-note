@@ -1,3 +1,4 @@
+// Connexion unique à la base SQLite — réutilisée dans toutes les routes via require()
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 

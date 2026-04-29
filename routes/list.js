@@ -1,16 +1,22 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// routes/list.js — Collection personnelle de l'utilisateur (accès protégé)
+// ═══════════════════════════════════════════════════════════════════════════════
+
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const CLIENT_ID = '754068118410-8s00fbmh36hst5e1aclmkf7v2ucp6mnb.apps.googleusercontent.com';
 
+// ── GET /list ─────────────────────────────────────────────────────────────────
+// Récupère tous les livres enregistrés par l'utilisateur, les enrichit via
+// OpenLibrary (titre, auteurs, couverture), puis les groupe par statut.
 router.get('/', async (req, res) => {
     if (!req.session.user){
         return res.redirect('/');
     }
 
     try {
-        // Récupérer tous les statuts des livres pour l'utilisateur
         const statuses = await new Promise((resolve, reject) => {
             db.all(
                 `SELECT api_book_id, status FROM library_status WHERE user_id = ?`,
@@ -22,7 +28,7 @@ router.get('/', async (req, res) => {
             );
         });
 
-        // Traiter les statuts et grouper les livres
+        // Structure de destination : chaque clé correspond à un statut possible
         const books = {
             favorite: [],
             reading: [],
@@ -30,7 +36,8 @@ router.get('/', async (req, res) => {
             wishlist: []
         };
 
-        // Récupérer les données de chaque livre depuis OpenLibrary
+        // Pour chaque livre enregistré, on interroge OpenLibrary pour obtenir ses détails.
+        // Les requêtes sont faites en série (for...of) — à passer en Promise.all si la liste grandit.
         for (const row of statuses) {
             try {
                 const response = await fetch(`https://openlibrary.org${row.api_book_id}.json`);
@@ -41,6 +48,7 @@ router.get('/', async (req, res) => {
                     coverUrl = `https://covers.openlibrary.org/b/id/${bookData.covers[0]}-M.jpg`;
                 }
 
+                // Chaque auteur nécessite un appel séparé à OpenLibrary
                 let authors = [];
                 if (bookData.authors && bookData.authors.length > 0) {
                     const authorPromises = bookData.authors.map(async (authorObj) => {

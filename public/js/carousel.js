@@ -1,3 +1,6 @@
+// ── Carrousel de livres ───────────────────────────────────────────────────────
+// Initialisé sur chaque élément .carousel-wrapper de la page.
+// Déplacement par index : translate le .books-grid d'un multiple de la largeur d'un item.
 document.querySelectorAll('.carousel-wrapper').forEach(wrapper => {
     const track     = wrapper.querySelector('.books-grid');
     const container = wrapper.querySelector('.carousel-track-container');
@@ -6,6 +9,7 @@ document.querySelectorAll('.carousel-wrapper').forEach(wrapper => {
 
     let currentIndex = 0;
 
+    // Largeur réelle d'un item (incluant le gap) pour calculer le déplacement
     function getItemWidth() {
         const item = track.querySelector('.book-item');
         if (!item) return 176; // 160px + 16px gap par défaut
@@ -45,7 +49,7 @@ document.querySelectorAll('.carousel-wrapper').forEach(wrapper => {
         }
     });
 
-    // Recalcule si la fenêtre est redimensionnée
+    // Recalcule les bornes si la fenêtre est redimensionnée
     window.addEventListener('resize', () => {
         currentIndex = Math.min(currentIndex, maxIndex());
         updateCarousel();

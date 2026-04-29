@@ -1,4 +1,5 @@
-// Gestion de la suppression de livres depuis la collection
+// ── Suppression de livres depuis la collection ────────────────────────────────
+// Le bookKey (ex: "/works/OL123W") est stocké dans data-book-key sur chaque bouton
 document.querySelectorAll('.btn-remove').forEach(btn => {
     btn.addEventListener('click', async function() {
         if (!confirm('Êtes-vous sûr de vouloir supprimer ce livre de votre collection ?')) {
@@ -34,6 +35,8 @@ document.querySelectorAll('.btn-remove').forEach(btn => {
 });
 
 
+// ── Comptage total des livres (affiché en console au chargement) ──────────────
+// Extrait les chiffres des titres de section (ex: "Favoris (3)") pour faire le total
 function displayStats() {
     const categories = document.querySelectorAll('.category-section');
     let totalBooks = 0;
@@ -48,7 +51,8 @@ function displayStats() {
     console.log(`📚 Total de livres dans votre collection: ${totalBooks}`);
 }
 
-// Gestion des carrousels
+// ── Carrousels de la page list ────────────────────────────────────────────────
+// Utilise scrollBy (scroll natif) contrairement à carousel.js qui utilise translateX
 document.querySelectorAll('.carousel-wrapper, .trending-carousel-wrapper').forEach(wrapper => {
     const btnNext = wrapper.querySelector('.btn-next');
     const btnPrev = wrapper.querySelector('.btn-prev');

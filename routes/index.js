@@ -1,12 +1,19 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// routes/index.js — Page d'accueil + authentification (Google OAuth & local)
+// ═══════════════════════════════════════════════════════════════════════════════
+
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 const { OAuth2Client } = require('google-auth-library');
 const db = require('../config/db');
-require('dotenv').config(); // À mettre tout en haut
+require('dotenv').config();
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(CLIENT_ID);
 
+// ── Helpers OpenLibrary ───────────────────────────────────────────────────────
+
+// Cache en mémoire pour éviter de re-requêter les sujets d'un même livre
 const subjectCache = new Map();
 
 async function getBookSubjects(bookKey) {
@@ -35,6 +42,7 @@ async function searchBySubject(subject) {
     }
 }
 
+// Récupère titre, auteurs et couverture d'un livre depuis son clé OpenLibrary
 async function getBookDetails(bookKey) {
     try {
         const response = await fetch(`https://openlibrary.org${bookKey}.json`);
@@ -69,7 +77,7 @@ async function getBookDetails(bookKey) {
     }
 }
 
-// Cache pour les tendances (évite de refaire l'appel à chaque visite)
+// Cache des tendances avec TTL d'1h pour limiter les appels à OpenLibrary
 let trendingCache = { books: [], fetchedAt: 0 };
 const TRENDING_TTL = 1000 * 60 * 60; // 1 heure
 
@@ -102,7 +110,9 @@ async function getTrendingBooks() {
     }
 }
 
-// ─── Page d'accueil ───────────────────────────────────────────────────
+// ── Page d'accueil ────────────────────────────────────────────────────────────
+// Charge les tendances pour tous, et les recommandations + livres terminés pour les connectés.
+// Les recommandations sont générées à partir des sujets des livres favoris/terminés de l'utilisateur.
 router.get('/', async (req, res) => {
     const user = req.session.user || null;
     let recommendations = [];
@@ -110,12 +120,15 @@ router.get('/', async (req, res) => {
     let trendingBooks = [];
 
     try {
-        // Tendances : toujours chargées, connecté ou non
         trendingBooks = await getTrendingBooks();
 
         if (user?.db_id) {
 
             // ── Recommandations ──────────────────────────────────────
+            // 1. Récupère les livres favoris/terminés de l'utilisateur
+            // 2. Extrait leurs sujets via OpenLibrary
+            // 3. Cherche d'autres livres partageant ces sujets
+            // 4. Filtre les livres déjà dans la collection
             const userBooks = await new Promise((resolve, reject) => {
                 db.all(
                     `SELECT api_book_id FROM library_status
@@ -196,7 +209,9 @@ router.get('/', async (req, res) => {
     }
 });
 
-// ─── Auth Google ──────────────────────────────────────────────────────
+// ── Auth Google ───────────────────────────────────────────────────────────────
+// Reçoit le token Google depuis le client, le vérifie, puis crée ou met à jour
+// l'utilisateur en base (upsert) avant d'ouvrir la session.
 router.post('/auth/google', async (req, res) => {
     const { credential } = req.body;
 
@@ -208,6 +223,7 @@ router.post('/auth/google', async (req, res) => {
 
         const payload = ticket.getPayload();
 
+        // Supprime les paramètres de taille de l'URL de la photo Google
         let picture = payload.picture;
         if (picture && picture.includes("=")) {
             picture = picture.split("=")[0];
@@ -247,14 +263,15 @@ router.post('/auth/google', async (req, res) => {
     }
 });
 
-// ─── Déconnexion ──────────────────────────────────────────────────────
+// ── Déconnexion ───────────────────────────────────────────────────────────────
 router.get('/logout', (req, res) => {
     req.session.destroy(() => {
         res.redirect('/');
     });
 });
 
-// ─── Auth Local : Inscription ─────────────────────────────────────────
+// ── Auth locale : Inscription ─────────────────────────────────────────────────
+// Crée un utilisateur dans `users` puis stocke le hash du mot de passe dans `auth_providers`
 router.post('/auth/register', async (req, res) => {
     const { email, password, username } = req.body;
     if (!email || !password) return res.status(400).json({ success: false, error: 'Email et mot de passe requis' });
@@ -291,7 +308,7 @@ router.post('/auth/register', async (req, res) => {
     }
 });
 
-// ─── Auth Local : Connexion ───────────────────────────────────────────
+// ── Auth locale : Connexion ───────────────────────────────────────────────────
 router.post('/auth/login', (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ success: false, error: 'Email et mot de passe requis' });

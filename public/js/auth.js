@@ -1,3 +1,5 @@
+// ── Google OAuth ──────────────────────────────────────────────────────────────
+// Callback appelé automatiquement par la lib Google Identity après sélection du compte
 function handleCredentialResponse(response) {
     fetch('/auth/google', {
         method: 'POST',
@@ -19,7 +21,7 @@ function handleCredentialResponse(response) {
     });
 }
 
-// Initialiser le bouton Google après le chargement
+// Initialise et affiche le bouton Google Sign-In une fois le DOM prêt
 window.onload = function() {
     if (typeof google !== 'undefined') {
         google.accounts.id.initialize({
@@ -33,12 +35,12 @@ window.onload = function() {
     }
 };
 
-// ── Dropdown Auth ──────────────────────────────────────────────────────
+// ── Dropdown Auth ─────────────────────────────────────────────────────────────
 function toggleAuthDropdown() {
     document.getElementById('authMenu').classList.toggle('open');
 }
 
-// Ferme si clic en dehors
+// Ferme le dropdown si l'utilisateur clique en dehors
 document.addEventListener('click', (e) => {
     const dropdown = document.querySelector('.auth-dropdown');
     if (dropdown && !dropdown.contains(e.target)) {
@@ -46,6 +48,7 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// Bascule entre les onglets "Connexion" et "Inscription"
 function switchTab(tab, btn) {
     document.querySelectorAll('.auth-tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -53,6 +56,7 @@ function switchTab(tab, btn) {
     document.getElementById('tab-register').classList.toggle('hidden', tab !== 'register');
 }
 
+// ── Formulaire Connexion ──────────────────────────────────────────────────────
 async function submitLogin() {
     const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value;
@@ -72,6 +76,7 @@ async function submitLogin() {
     }
 }
 
+// ── Formulaire Inscription ────────────────────────────────────────────────────
 async function submitRegister() {
     const username = document.getElementById('reg-username').value.trim();
     const email = document.getElementById('reg-email').value.trim();

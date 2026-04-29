@@ -1,8 +1,15 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// routes/profil.js — Profil utilisateur avec statistiques de lecture (accès protégé)
+// ═══════════════════════════════════════════════════════════════════════════════
+
 const express = require('express');
 const router = express.Router();
 const CLIENT_ID = '754068118410-8s00fbmh36hst5e1aclmkf7v2ucp6mnb.apps.googleusercontent.com';
 const db = require('../config/db');
 
+// ── GET /profil ───────────────────────────────────────────────────────────────
+// Agrège en 3 requêtes parallèles : le compte de livres par statut,
+// la date d'inscription et le dernier livre modifié.
 router.get('/', async (req, res) => {
     if (!req.session.user) {
         return res.redirect('/');
@@ -11,7 +18,7 @@ router.get('/', async (req, res) => {
     const userId = req.session.user.db_id;
 
     try {
-        // Compte par statut
+        // Nombre de livres par statut (favorite / reading / completed / wishlist)
         const stats = await new Promise((resolve, reject) => {
             db.all(
                 `SELECT status, COUNT(*) as count
@@ -23,7 +30,6 @@ router.get('/', async (req, res) => {
             );
         });
 
-        // Date d'inscription
         const userInfo = await new Promise((resolve, reject) => {
             db.get(
                 `SELECT created_at FROM users WHERE id = ?`,
@@ -32,7 +38,6 @@ router.get('/', async (req, res) => {
             );
         });
 
-        // Dernier livre ajouté
         const lastBook = await new Promise((resolve, reject) => {
             db.get(
                 `SELECT api_book_id, status, updated_at
@@ -45,7 +50,7 @@ router.get('/', async (req, res) => {
             );
         });
 
-        // Formater les stats en objet simple
+        // Convertit le tableau de lignes SQL en objet clé→valeur pour la vue
         const statsMap = { favorite: 0, reading: 0, completed: 0, wishlist: 0 };
         stats.forEach(row => { statsMap[row.status] = row.count; });
         const totalBooks = Object.values(statsMap).reduce((a, b) => a + b, 0);
