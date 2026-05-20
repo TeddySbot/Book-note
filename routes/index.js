@@ -257,10 +257,7 @@ router.post('/auth/google', async (req, res) => {
                         locale: payload.locale,
                     };
 
-                    if (isFedCM) {
-                        res.cookie('auth_complete', '1', { maxAge: 10000, httpOnly: false, sameSite: 'lax', path: '/' });
-                        return res.redirect('/');
-                    }
+                    if (isFedCM) return res.redirect('/');
                     res.json({ success: true, user: req.session.user });
                 });
             }
@@ -269,6 +266,11 @@ router.post('/auth/google', async (req, res) => {
         if (isFedCM) return res.redirect('/');
         res.status(400).json({ success: false, error: error.message });
     }
+});
+
+// ── Statut session (utilisé par le polling FedCM côté client) ─────────────────
+router.get('/auth/status', (req, res) => {
+    res.json({ loggedIn: !!req.session.user });
 });
 
 // ── Déconnexion ───────────────────────────────────────────────────────────────

@@ -1,15 +1,22 @@
 // ── Détection login FedCM ─────────────────────────────────────────────────────
-// FedCM poste les credentials en arrière-plan (pas de navigation page).
-// On surveille le cookie auth_complete posé par le serveur après le POST FedCM.
-(function() {
-    const poll = setInterval(() => {
-        if (document.cookie.includes('auth_complete=1')) {
-            clearInterval(poll);
-            window.location.reload();
-        }
-    }, 500);
-    setTimeout(() => clearInterval(poll), 120000);
-})();
+// FedCM poste les credentials en arrière-plan sans naviguer la page.
+// On poll /auth/status uniquement après un clic sur le bouton Google.
+let fedcmPoll = null;
+
+function startFedcmPolling() {
+    if (fedcmPoll) return;
+    fedcmPoll = setInterval(async () => {
+        try {
+            const res = await fetch('/auth/status', { credentials: 'same-origin' });
+            const { loggedIn } = await res.json();
+            if (loggedIn) {
+                clearInterval(fedcmPoll);
+                window.location.reload();
+            }
+        } catch (e) {}
+    }, 800);
+    setTimeout(() => { clearInterval(fedcmPoll); fedcmPoll = null; }, 60000);
+}
 
 // ── Google OAuth ──────────────────────────────────────────────────────────────
 // Callback appelé automatiquement par la lib Google Identity après sélection du compte
@@ -45,6 +52,7 @@ window.onload = function() {
             document.getElementById('buttonDiv'),
             { theme: 'outline', size: 'large' }
         );
+        document.getElementById('buttonDiv')?.addEventListener('click', startFedcmPolling);
     }
 };
 
