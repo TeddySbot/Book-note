@@ -209,11 +209,19 @@ router.get('/', async (req, res) => {
     }
 });
 
-// ── Auth Google ───────────────────────────────────────────────────────────────
-// Reçoit le token Google depuis le client, le vérifie, puis crée ou met à jour
-// l'utilisateur en base (upsert) avant d'ouvrir la session.
-router.post('/auth/google', async (req, res) => {
+// ── Auth Google (handler partagé) ────────────────────────────────────────────
+// Vérifie le token Google, crée ou met à jour l'utilisateur en base, ouvre la session.
+// Utilisé par POST /auth/google (appel JS) et POST / (fallback FedCM navigateur).
+async function handleGoogleAuth(req, res) {
+    console.log('🔍 Google Auth — body:', JSON.stringify(req.body));
+    console.log('🔍 Google Auth — content-type:', req.headers['content-type']);
+
     const { credential } = req.body;
+    if (!credential) {
+        // FedCM n'a pas envoyé de credential → on redirige simplement vers l'accueil
+        return res.redirect('/');
+    }
+
     const isFedCM = req.is('application/x-www-form-urlencoded');
 
     try {
@@ -257,8 +265,15 @@ router.post('/auth/google', async (req, res) => {
                         locale: payload.locale,
                     };
 
-                    if (isFedCM) return res.redirect('/');
-                    res.json({ success: true, user: req.session.user });
+                    req.session.save((saveErr) => {
+                        if (saveErr) {
+                            console.error('❌ Session save error:', saveErr);
+                            if (isFedCM) return res.redirect('/');
+                            return res.status(500).json({ success: false, error: 'Erreur session' });
+                        }
+                        if (isFedCM) return res.redirect('/');
+                        res.json({ success: true, user: req.session.user });
+                    });
                 });
             }
         );
@@ -266,7 +281,15 @@ router.post('/auth/google', async (req, res) => {
         if (isFedCM) return res.redirect('/');
         res.status(400).json({ success: false, error: error.message });
     }
-});
+}
+
+router.post('/auth/google', handleGoogleAuth);
+
+// ── Fallback FedCM ───────────────────────────────────────────────────────────
+// Quand FedCM s'active automatiquement (nouvelle session, après challenge Cloudflare),
+// le navigateur peut poster le credential directement sur l'URL courante (/)
+// au lieu de /auth/google. Ce handler intercepte ce cas.
+router.post('/', handleGoogleAuth);
 
 // ── Statut session (utilisé par le polling FedCM côté client) ─────────────────
 router.get('/auth/status', (req, res) => {
