@@ -214,6 +214,7 @@ router.get('/', async (req, res) => {
 // l'utilisateur en base (upsert) avant d'ouvrir la session.
 router.post('/auth/google', async (req, res) => {
     const { credential } = req.body;
+    const isFedCM = req.is('application/x-www-form-urlencoded');
 
     try {
         const ticket = await client.verifyIdToken({
@@ -236,12 +237,14 @@ router.post('/auth/google', async (req, res) => {
             function(err) {
                 if (err) {
                     console.error('❌ DB write error:', err.message);
+                    if (isFedCM) return res.redirect('/');
                     return res.status(500).json({ success: false, error: 'Erreur BD' });
                 }
 
                 db.get('SELECT id FROM users WHERE email = ?', [payload.email], (err, row) => {
                     if (err || !row) {
                         console.error('❌ DB read error:', err?.message);
+                        if (isFedCM) return res.redirect('/');
                         return res.status(500).json({ success: false, error: 'Erreur BD' });
                     }
 
@@ -254,11 +257,16 @@ router.post('/auth/google', async (req, res) => {
                         locale: payload.locale,
                     };
 
+                    if (isFedCM) {
+                        res.cookie('auth_complete', '1', { maxAge: 10000, httpOnly: false, sameSite: 'lax', path: '/' });
+                        return res.redirect('/');
+                    }
                     res.json({ success: true, user: req.session.user });
                 });
             }
         );
     } catch (error) {
+        if (isFedCM) return res.redirect('/');
         res.status(400).json({ success: false, error: error.message });
     }
 });

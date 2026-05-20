@@ -1,3 +1,16 @@
+// ── Détection login FedCM ─────────────────────────────────────────────────────
+// FedCM poste les credentials en arrière-plan (pas de navigation page).
+// On surveille le cookie auth_complete posé par le serveur après le POST FedCM.
+(function() {
+    const poll = setInterval(() => {
+        if (document.cookie.includes('auth_complete=1')) {
+            clearInterval(poll);
+            window.location.reload();
+        }
+    }, 500);
+    setTimeout(() => clearInterval(poll), 120000);
+})();
+
 // ── Google OAuth ──────────────────────────────────────────────────────────────
 // Callback appelé automatiquement par la lib Google Identity après sélection du compte
 function handleCredentialResponse(response) {
