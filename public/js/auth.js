@@ -25,7 +25,7 @@ function handleCredentialResponse(response) {
 window.onload = function() {
     if (typeof google !== 'undefined') {
         google.accounts.id.initialize({
-            client_id: document.getElementById('g_id_onload')?.dataset.clientId,
+            client_id: document.getElementById('g_id_onload')?.dataset.client_id,
             callback: handleCredentialResponse
         });
         google.accounts.id.renderButton(
